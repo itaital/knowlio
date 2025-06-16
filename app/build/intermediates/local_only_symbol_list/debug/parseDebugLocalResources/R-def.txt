@@ -1,0 +1,12 @@
+R_DEF: Internal format may change without notice
+local
+id btnHistory
+id btnQuiz
+id tvDailyContent
+id tvDateTitle
+layout activity_main
+string app_name
+string daily_fact_title
+string history_button
+string quiz_button
+string sample_fact

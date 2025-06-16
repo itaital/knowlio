@@ -1,0 +1,26 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.knowlio.app-mergeDebugResources-29:/values-he/values-he.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\itait\\Downloads\\Knowlio_skeleton\\Knowlio\\app\\src\\main\\res\\values-he\\strings.xml",
+                    "from": {
+                        "startLines": "1,2,4,3,5",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "16,61,165,115,217",
+                        "endColumns": "44,53,51,49,63",
+                        "endOffsets": "56,110,212,160,276"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,100,154,206,256",
+                        "endColumns": "44,53,51,49,63",
+                        "endOffsets": "95,149,201,251,315"
+                    }
+                }
+            ]
+        }
+    ]
+}

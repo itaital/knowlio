@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Knowlio</string>
+    <string name="daily_fact_title">Tägliches Wissen</string>
+    <string name="quiz_button">Tägliches Quiz</string>
+    <string name="history_button">Verlauf</string>
+    <string name="sample_fact">Beispielfakt wird hier angezeigt.</string>
+</resources>

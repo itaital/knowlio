@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Knowlio</string>
+    <string name="daily_fact_title">Conhecimento Diário</string>
+    <string name="history_button">Histórico</string>
+    <string name="quiz_button">Quiz Diário</string>
+    <string name="sample_fact">Fato de exemplo aparecerá aqui.</string>
+</resources>

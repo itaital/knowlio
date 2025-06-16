@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal"
+    tools:context=".activities.MainActivity">
+
+    <!-- כותרת עם תאריך/נושא -->
+    <TextView
+        android:id="@+id/tvDateTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/daily_fact_title"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <!-- תוכן יומי ניתן לגלילה -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tvDailyContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sample_fact"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp" />
+    </ScrollView>
+
+    <!-- כפתורים לחידון ולהיסטוריה -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="12dp">
+
+        <Button
+            android:id="@+id/btnQuiz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/quiz_button"
+            android:layout_marginEnd="16dp" />
+
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/history_button" />
+    </LinearLayout>
+
+</LinearLayout>
