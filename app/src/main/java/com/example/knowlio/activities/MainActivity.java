@@ -1,28 +1,28 @@
 package com.example.knowlio.activities;
 
+import android.Manifest;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.PeriodicWorkRequestBuilder;
-import java.util.concurrent.TimeUnit;
-import java.time.Duration;
-
-import com.example.knowlio.work.DailyFetchWorker;
-import com.example.knowlio.work.DailyReminderWorker;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.knowlio.R;
 import com.example.knowlio.data.models.DailyFact;
 import com.example.knowlio.data.network.FactsApi;
+import com.example.knowlio.work.DailyFetchWorker;
+import com.example.knowlio.work.DailyReminderWorker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,73 +35,79 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PeriodicWorkRequest request =
-                new PeriodicWorkRequest.Builder(DailyFetchWorker.class, 24, java.util.concurrent.TimeUnit.HOURS)
+        setContentView(R.layout.activity_main);
+
+        if (android.os.Build.VERSION.SDK_INT >= 33 &&
+                ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.POST_NOTIFICATIONS)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{ Manifest.permission.POST_NOTIFICATIONS },
+                    123);
+        }
+
+        /* ---------- 1.  הורדת fact אוטומטית פעם ביום ---------- */
+        PeriodicWorkRequest fetchRequest =
+                new PeriodicWorkRequest.Builder(
+                        DailyFetchWorker.class,
+                        24, TimeUnit.HOURS)
                         .build();
+
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "daily_fetch",
                 ExistingPeriodicWorkPolicy.KEEP,
-                request);
+                fetchRequest);
 
-        PeriodicWorkRequest reminderRequest = new PeriodicWorkRequestBuilder<DailyReminderWorker>(24, TimeUnit.HOURS)
-                .setInitialDelay(calculateNext14hDelay())
-                .build();
+        /* ---------- 2.  התראת תזכורת יומית ---------- */
+        PeriodicWorkRequest reminderRequest =
+                new PeriodicWorkRequest.Builder(
+                        DailyReminderWorker.class,
+                        24, TimeUnit.HOURS)
+                        .setInitialDelay(millisUntilNext14h(), TimeUnit.MILLISECONDS)
+                        //.setInitialDelay(millisUntilNext14h(), TimeUnit.MILLISECONDS) // לשימוש קבוע
+                        .build();
+
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "daily_reminder",
-                ExistingPeriodicWorkPolicy.KEEP,
+                ExistingPeriodicWorkPolicy.REPLACE,   // בזמן בדיקה; החזר ל-KEEP אחרי שמוודא
                 reminderRequest);
-        setContentView(R.layout.activity_main);
 
-        // 1) מצביעים ל-TextView-ים מה-layout
+        /* ---------- 3.  הצגת fact במסך ---------- */
         TextView tvContent = findViewById(R.id.tvDailyContent);
         TextView tvTitle   = findViewById(R.id.tvDateTitle);
 
-// --- במקום הקוד הישן: Retrofit retrofit = new Retrofit.Builder()...
-// 1. בונים Gson רגוע
-        Gson gson = new GsonBuilder()
-                .setLenient()        // מאפשר תווים עודפים (BOM, רווח)
-                .create();
+        Gson gson = new GsonBuilder().setLenient().create();
 
-// 2. בונים Retrofit עם ה-Gson הזה
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://gist.githubusercontent.com/itaital/734a548a728191c298d71e60afcd0dd2/")
-                .addConverterFactory(GsonConverterFactory.create(gson))   // <-- משתמשים בגירסה lenient
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         FactsApi api = retrofit.create(FactsApi.class);
 
-        // 3) קריאה אסינכרונית ל-JSON
         api.getFact().enqueue(new Callback<DailyFact>() {
-            @Override
-            public void onResponse(Call<DailyFact> call, Response<DailyFact> res) {
+            @Override public void onResponse(Call<DailyFact> call, Response<DailyFact> res) {
                 if (res.isSuccessful() && res.body() != null) {
                     DailyFact fact = res.body();
-
-                    // כותרת עם תאריך היום
                     tvTitle.setText(getString(R.string.daily_fact_title) + " – " + fact.date);
 
-                    // בחירת שפה: עברית או אנגלית לפי העדפת המשתמש
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                    SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                     String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
-                    boolean isHeb = lang.equals("he");
-                    tvContent.setText(isHeb ? fact.he : fact.en);
+                    tvContent.setText(lang.equals("he") ? fact.he : fact.en);
                 } else {
                     tvContent.setText("⚠️ ‎Error: empty body");
                 }
             }
-
-            @Override
-            public void onFailure(Call<DailyFact> call, Throwable t) {
-                // מדפיסים את שם החריגה והודעתה כדי שנדע מה קרה
-                String msg = t.getClass().getSimpleName() + " : " + t.getMessage();
-                TextView tvContent = findViewById(R.id.tvDailyContent);
-                tvContent.setText("⚠️ " + msg);
-                t.printStackTrace();   // גם בלוגקט
+            @Override public void onFailure(Call<DailyFact> call, Throwable t) {
+                tvContent.setText("⚠️ " + t.getClass().getSimpleName() + " : " + t.getMessage());
             }
         });
     }
 
-    private Duration calculateNext14hDelay() {
+    /** כמה מילישניות נשארו עד 14:00 הקרוב. */
+    private long millisUntilNext14h() {
         java.util.Calendar cal = java.util.Calendar.getInstance();
         long now = cal.getTimeInMillis();
 
@@ -111,10 +117,8 @@ public class MainActivity extends AppCompatActivity {
         cal.set(java.util.Calendar.MILLISECOND, 0);
 
         if (now >= cal.getTimeInMillis()) {
-            cal.add(java.util.Calendar.DAY_OF_YEAR, 1);
+            cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
         }
-
-        long diff = cal.getTimeInMillis() - now;
-        return Duration.ofMillis(diff);
+        return cal.getTimeInMillis() - now;
     }
 }

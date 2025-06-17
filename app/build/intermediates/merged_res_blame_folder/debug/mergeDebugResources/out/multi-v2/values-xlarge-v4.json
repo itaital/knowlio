@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.knowlio.app-mergeDebugResources-29:/values-xlarge-v4/values-xlarge-v4.xml",
+            "outputFile": "com.example.knowlio.app-mergeDebugResources-43:/values-xlarge-v4/values-xlarge-v4.xml",
             "map": [
                 {
                     "source": "C:\\Users\\itait\\.gradle\\caches\\8.12\\transforms\\274159cc7cddc7827911a74391600994\\transformed\\appcompat-1.7.0\\res\\values-xlarge-v4\\values-xlarge-v4.xml",

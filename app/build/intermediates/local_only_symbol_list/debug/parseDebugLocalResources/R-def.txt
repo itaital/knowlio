@@ -1,5 +1,6 @@
 R_DEF: Internal format may change without notice
 local
+drawable ic_launcher
 id btnEnglish
 id btnHebrew
 id btnHistory

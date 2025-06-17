@@ -1,5 +1,8 @@
 package com.example.knowlio.work;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -22,22 +25,37 @@ public class DailyReminderWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        NotificationHelper.createDailyReminderChannel(getApplicationContext());
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        /* 1. ערוץ (API 26+) */
+        final String CH = "daily_reminder_channel";
+        if (android.os.Build.VERSION.SDK_INT >= 26) {
+            NotificationChannel c = new NotificationChannel(
+                    CH, "Knowlio Reminders",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            c.enableVibration(false);          // לבטל רטט
+            c.setSound(null, null);
+            getApplicationContext()
+                    .getSystemService(NotificationManager.class)
+                    .createNotificationChannel(c);
+        }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                getApplicationContext(), NotificationHelper.REMINDER_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher)
+        /* 2. PendingIntent לפתיחת MainActivity */
+        PendingIntent pi = PendingIntent.getActivity(
+                getApplicationContext(),
+                0,
+                new Intent(getApplicationContext(), MainActivity.class),
+                PendingIntent.FLAG_IMMUTABLE);
+
+        /* 3. ההתראה עצמה */
+        Notification n = new NotificationCompat.Builder(getApplicationContext(), CH)
+                .setSmallIcon(android.R.drawable.ic_dialog_info)  // אייקון מערכת מהיר
                 .setContentTitle("Knowlio")
-                .setContentText("\u2728 Your daily knowledge is ready! Tap to read.")
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                .setContentText("✨ Your daily knowledge is ready! Tap to read.")
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
 
-        NotificationManagerCompat.from(getApplicationContext()).notify(2000, builder.build());
+        NotificationManagerCompat.from(getApplicationContext()).notify(42, n);
 
         return Result.success();
     }
