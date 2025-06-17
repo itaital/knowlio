@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Button;
+
+import androidx.fragment.app.FragmentTransaction;
+import com.example.knowlio.fragments.HistoryFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -77,6 +81,14 @@ public class MainActivity extends AppCompatActivity {
         /* ---------- 3.  הצגת fact במסך ---------- */
         TextView tvContent = findViewById(R.id.tvDailyContent);
         TextView tvTitle   = findViewById(R.id.tvDateTitle);
+        Button btnHistory  = findViewById(R.id.btnHistory);
+
+        btnHistory.setOnClickListener(v -> {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.container, new HistoryFragment());
+            ft.addToBackStack(null);
+            ft.commit();
+        });
 
         Gson gson = new GsonBuilder().setLenient().create();
 

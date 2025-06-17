@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center_horizontal"
+    android:id="@+id/container"
     tools:context=".activities.MainActivity">
 
     <!-- כותרת עם תאריך/נושא -->

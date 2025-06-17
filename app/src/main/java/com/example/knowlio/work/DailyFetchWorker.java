@@ -15,6 +15,7 @@ import androidx.work.WorkerParameters;
 import com.example.knowlio.R;
 import com.example.knowlio.activities.MainActivity;
 import com.example.knowlio.data.models.DailyFact;
+import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.data.network.FactsApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,11 +46,13 @@ public class DailyFetchWorker extends Worker {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         FactsApi api = retrofit.create(FactsApi.class);
+        FactsRepository repo = new FactsRepository(getApplicationContext());
 
         try {
             Response<DailyFact> res = api.getFact().execute();
             if (res.isSuccessful() && res.body() != null) {
                 DailyFact fact = res.body();
+                repo.saveFact(fact);
                 prefs.edit()
                         .putString("cached_fact_date", fact.date)
                         .putString("cached_fact_en", fact.en)
