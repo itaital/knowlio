@@ -16,4 +16,7 @@ public interface DailyFactDao {
 
     @Query("SELECT * FROM DailyFactEntity ORDER BY date DESC")
     LiveData<List<DailyFactEntity>> getAll();   //  ←  עכשיו LiveData, לא List רגיל
+
+    @Query("SELECT * FROM DailyFactEntity ORDER BY date DESC LIMIT 1")
+    LiveData<DailyFactEntity> getLatest();
 }
