@@ -18,21 +18,13 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.example.knowlio.R;
-import com.example.knowlio.data.models.DailyFact;
-import com.example.knowlio.data.network.FactsApi;
+import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.work.DailyFetchWorker;
 import com.example.knowlio.work.DailyReminderWorker;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -90,30 +82,15 @@ public class MainActivity extends AppCompatActivity {
             ft.commit();
         });
 
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://gist.githubusercontent.com/itaital/734a548a728191c298d71e60afcd0dd2/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        FactsApi api = retrofit.create(FactsApi.class);
-
-        api.getFact().enqueue(new Callback<DailyFact>() {
-            @Override public void onResponse(Call<DailyFact> call, Response<DailyFact> res) {
-                if (res.isSuccessful() && res.body() != null) {
-                    DailyFact fact = res.body();
-                    tvTitle.setText(getString(R.string.daily_fact_title) + " – " + fact.date);
-
-                    SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-                    String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
-                    tvContent.setText(lang.equals("he") ? fact.he : fact.en);
-                } else {
-                    tvContent.setText("⚠️ ‎Error: empty body");
-                }
-            }
-            @Override public void onFailure(Call<DailyFact> call, Throwable t) {
-                tvContent.setText("⚠️ " + t.getClass().getSimpleName() + " : " + t.getMessage());
+        FactsRepository repo = new FactsRepository(this);
+        repo.getLatest().observe(this, fact -> {
+            if (fact != null) {
+                SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
+                tvTitle.setText("\uD83D\uDCC5 Daily Knowledge — " + fact.date);
+                tvContent.setText("he".equals(lang) ? fact.he : fact.en);
+            } else {
+                tvContent.setText("⚠️ No data");
             }
         });
     }

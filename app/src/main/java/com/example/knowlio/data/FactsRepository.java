@@ -31,4 +31,9 @@ public class FactsRepository {
     public LiveData<List<DailyFactEntity>> getHistory() {
         return dao.getAll();
     }
+
+    /* העובדה העדכנית ביותר */
+    public LiveData<DailyFactEntity> getLatest() {
+        return dao.getLatest();
+    }
 }
