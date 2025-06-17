@@ -3573,6 +3573,7 @@ int id right_side 0x7f08017c
 int id rounded 0x7f08017d
 int id row_index_key 0x7f08017e
 int id rtl 0x7f08017f
+int id rvHistory 0x7f08020c
 int id save_non_transition_alpha 0x7f080180
 int id save_overlay_view 0x7f080181
 int id sawtooth 0x7f080182
@@ -3848,6 +3849,7 @@ int layout design_navigation_menu_item 0x7f0b002b
 int layout design_text_input_end_icon 0x7f0b002c
 int layout design_text_input_start_icon 0x7f0b002d
 int layout expand_button 0x7f0b002e
+int layout fragment_history 0x7f0b007f
 int layout image_frame 0x7f0b002f
 int layout ime_base_split_test_activity 0x7f0b0030
 int layout ime_secondary_split_test_activity 0x7f0b0031

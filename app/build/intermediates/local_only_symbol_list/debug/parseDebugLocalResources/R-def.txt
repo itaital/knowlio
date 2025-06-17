@@ -5,10 +5,13 @@ id btnEnglish
 id btnHebrew
 id btnHistory
 id btnQuiz
+id container
+id rvHistory
 id tvDailyContent
 id tvDateTitle
 layout activity_main
 layout activity_on_board_language
+layout fragment_history
 string app_name
 string daily_fact_title
 string history_button

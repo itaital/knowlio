@@ -22,24 +22,35 @@ import java.util.List;
 public class HistoryFragment extends Fragment {
 
     private HistoryAdapter adapter;
+    private String lang;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    @Nullable @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_history, container, false);
+
+        /* RecyclerView */
         RecyclerView rv = view.findViewById(R.id.rvHistory);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new HistoryAdapter();
         rv.setAdapter(adapter);
-        loadData();
+
+        /* שפת המשתמש */
+        SharedPreferences prefs =
+                PreferenceManager.getDefaultSharedPreferences(requireContext());
+        lang = prefs.getString("pref_lang", "en");
+
+        /* Repository + LiveData */
+        FactsRepository repo = new FactsRepository(requireContext());
+        repo.getHistory().observe(getViewLifecycleOwner(), this::updateUi);
+
         return view;
     }
 
-    private void loadData() {
-        FactsRepository repo = new FactsRepository(requireContext());
-        List<DailyFactEntity> history = repo.getHistory();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        String lang = prefs.getString("pref_lang", "en");
-        adapter.setData(history, lang);
+    /** מקבלת את הרשימה מה-LiveData ומזרימה אותה לאדפטר */
+    private void updateUi(List<DailyFactEntity> list) {
+        adapter.setData(list, lang);   // HistoryAdapter שלך כבר יודע לסנן לפי lang
     }
 }
