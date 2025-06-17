@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-
 import com.example.knowlio.R;
 
 public class OnBoardLanguageActivity extends AppCompatActivity {
@@ -15,7 +13,7 @@ public class OnBoardLanguageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         if (prefs.contains("pref_lang")) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
@@ -32,7 +30,7 @@ public class OnBoardLanguageActivity extends AppCompatActivity {
     }
 
     private void saveLangAndStart(String lang) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         prefs.edit().putString("pref_lang", lang).apply();
         startActivity(new Intent(this, MainActivity.class));
         finish();

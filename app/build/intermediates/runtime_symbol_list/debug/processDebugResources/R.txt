@@ -3204,6 +3204,8 @@ int id bounce 0x7f080061
 int id bounceBoth 0x7f080062
 int id bounceEnd 0x7f080063
 int id bounceStart 0x7f080064
+int id btnEnglish 0x7f0801fd
+int id btnHebrew 0x7f0801fe
 int id btnHistory 0x7f080065
 int id btnQuiz 0x7f080066
 int id buttonPanel 0x7f080067
@@ -3727,6 +3729,7 @@ int layout abc_search_view 0x7f0b0019
 int layout abc_select_dialog_material 0x7f0b001a
 int layout abc_tooltip 0x7f0b001b
 int layout activity_main 0x7f0b001c
+int layout activity_on_board_language 0x7f0b006c
 int layout custom_dialog 0x7f0b001d
 int layout design_bottom_navigation_item 0x7f0b001e
 int layout design_bottom_sheet_dialog 0x7f0b001f

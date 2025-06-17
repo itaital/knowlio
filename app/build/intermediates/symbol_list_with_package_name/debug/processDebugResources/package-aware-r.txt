@@ -3205,6 +3205,8 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnEnglish
+id btnHebrew
 id btnHistory
 id btnQuiz
 id buttonPanel
@@ -3728,6 +3730,7 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_main
+layout activity_on_board_language
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog
