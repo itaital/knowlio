@@ -3,6 +3,7 @@ package com.example.knowlio.activities;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.content.SharedPreferences;
+import androidx.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     tvTitle.setText(getString(R.string.daily_fact_title) + " – " + fact.date);
 
                     // בחירת שפה: עברית או אנגלית לפי העדפת המשתמש
-                    SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                     String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
                     boolean isHeb = lang.equals("he");
                     tvContent.setText(isHeb ? fact.he : fact.en);
