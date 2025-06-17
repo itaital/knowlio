@@ -2,6 +2,8 @@ package com.example.knowlio.activities;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.content.SharedPreferences;
+import androidx.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -54,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
                     // כותרת עם תאריך היום
                     tvTitle.setText(getString(R.string.daily_fact_title) + " – " + fact.date);
 
-                    // בחירת שפה: עברית או אנגלית לפי שפת המכשיר
-                    boolean isHeb = Locale.getDefault().getLanguage().equals("he");
+                    // בחירת שפה: עברית או אנגלית לפי העדפת המשתמש
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                    String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
+                    boolean isHeb = lang.equals("he");
                     tvContent.setText(isHeb ? fact.he : fact.en);
                 } else {
                     tvContent.setText("⚠️ ‎Error: empty body");
