@@ -4,6 +4,15 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.PeriodicWorkRequestBuilder;
+import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+
+import com.example.knowlio.work.DailyFetchWorker;
+import com.example.knowlio.work.DailyReminderWorker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +35,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PeriodicWorkRequest request =
+                new PeriodicWorkRequest.Builder(DailyFetchWorker.class, 24, java.util.concurrent.TimeUnit.HOURS)
+                        .build();
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "daily_fetch",
+                ExistingPeriodicWorkPolicy.KEEP,
+                request);
+
+        PeriodicWorkRequest reminderRequest = new PeriodicWorkRequestBuilder<DailyReminderWorker>(24, TimeUnit.HOURS)
+                .setInitialDelay(calculateNext14hDelay())
+                .build();
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "daily_reminder",
+                ExistingPeriodicWorkPolicy.KEEP,
+                reminderRequest);
         setContentView(R.layout.activity_main);
 
         // 1) מצביעים ל-TextView-ים מה-layout
@@ -75,5 +99,22 @@ public class MainActivity extends AppCompatActivity {
                 t.printStackTrace();   // גם בלוגקט
             }
         });
+    }
+
+    private Duration calculateNext14hDelay() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        long now = cal.getTimeInMillis();
+
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 14);
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+
+        if (now >= cal.getTimeInMillis()) {
+            cal.add(java.util.Calendar.DAY_OF_YEAR, 1);
+        }
+
+        long diff = cal.getTimeInMillis() - now;
+        return Duration.ofMillis(diff);
     }
 }
