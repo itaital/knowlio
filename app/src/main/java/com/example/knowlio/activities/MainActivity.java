@@ -4,6 +4,12 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import java.util.concurrent.TimeUnit;
+
+import com.example.knowlio.work.DailyFetchWorker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PeriodicWorkRequest request =
+                new PeriodicWorkRequest.Builder(DailyFetchWorker.class, 24, java.util.concurrent.TimeUnit.HOURS)
+                        .build();
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "daily_fetch",
+                ExistingPeriodicWorkPolicy.KEEP,
+                request);
         setContentView(R.layout.activity_main);
 
         // 1) מצביעים ל-TextView-ים מה-layout
