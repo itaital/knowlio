@@ -291,65 +291,65 @@
 153            </intent-filter>
 154        </receiver>
 155
-156        <uses-library
-156-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:25:9-27:40
-157            android:name="androidx.window.extensions"
-157-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:26:13-54
-158            android:required="false" />
-158-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:27:13-37
-159        <uses-library
-159-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:28:9-30:40
-160            android:name="androidx.window.sidecar"
-160-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:29:13-51
-161            android:required="false" />
-161-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:30:13-37
-162
-163        <receiver
-163-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
-164            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-164-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
-165            android:directBootAware="false"
-165-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
-166            android:enabled="true"
-166-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
-167            android:exported="true"
-167-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
-168            android:permission="android.permission.DUMP" >
-168-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
-169            <intent-filter>
-169-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
-170                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-170-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
-170-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
-171            </intent-filter>
-172            <intent-filter>
-172-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
-173                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-173-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
-173-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
-174            </intent-filter>
-175            <intent-filter>
-175-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
-176                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-176-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
-176-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
-177            </intent-filter>
-178            <intent-filter>
-178-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
-179                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-179-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
-179-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
-180            </intent-filter>
-181        </receiver>
-182
-183        <service
-183-->[androidx.room:room-runtime:2.5.0] C:\Users\itait\.gradle\caches\8.12\transforms\6c5ee1263d895ac2a24d7b1ae2fc87f2\transformed\room-runtime-2.5.0\AndroidManifest.xml:24:9-28:63
-184            android:name="androidx.room.MultiInstanceInvalidationService"
-184-->[androidx.room:room-runtime:2.5.0] C:\Users\itait\.gradle\caches\8.12\transforms\6c5ee1263d895ac2a24d7b1ae2fc87f2\transformed\room-runtime-2.5.0\AndroidManifest.xml:25:13-74
-185            android:directBootAware="true"
-185-->[androidx.room:room-runtime:2.5.0] C:\Users\itait\.gradle\caches\8.12\transforms\6c5ee1263d895ac2a24d7b1ae2fc87f2\transformed\room-runtime-2.5.0\AndroidManifest.xml:26:13-43
-186            android:exported="false" />
-186-->[androidx.room:room-runtime:2.5.0] C:\Users\itait\.gradle\caches\8.12\transforms\6c5ee1263d895ac2a24d7b1ae2fc87f2\transformed\room-runtime-2.5.0\AndroidManifest.xml:27:13-37
+156        <service
+156-->[androidx.room:room-runtime:2.6.1] C:\Users\itait\.gradle\caches\8.12\transforms\681c979119158ce346ce6e0faf371a6f\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
+157            android:name="androidx.room.MultiInstanceInvalidationService"
+157-->[androidx.room:room-runtime:2.6.1] C:\Users\itait\.gradle\caches\8.12\transforms\681c979119158ce346ce6e0faf371a6f\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
+158            android:directBootAware="true"
+158-->[androidx.room:room-runtime:2.6.1] C:\Users\itait\.gradle\caches\8.12\transforms\681c979119158ce346ce6e0faf371a6f\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
+159            android:exported="false" />
+159-->[androidx.room:room-runtime:2.6.1] C:\Users\itait\.gradle\caches\8.12\transforms\681c979119158ce346ce6e0faf371a6f\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
+160
+161        <uses-library
+161-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:25:9-27:40
+162            android:name="androidx.window.extensions"
+162-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:26:13-54
+163            android:required="false" />
+163-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:27:13-37
+164        <uses-library
+164-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:28:9-30:40
+165            android:name="androidx.window.sidecar"
+165-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:29:13-51
+166            android:required="false" />
+166-->[androidx.window:window:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\ce850f2e0c72978f9c54e0d62401c6f8\transformed\jetified-window-1.0.0\AndroidManifest.xml:30:13-37
+167
+168        <receiver
+168-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+169            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+169-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+170            android:directBootAware="false"
+170-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+171            android:enabled="true"
+171-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+172            android:exported="true"
+172-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+173            android:permission="android.permission.DUMP" >
+173-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+174            <intent-filter>
+174-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+175                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+175-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+175-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+176            </intent-filter>
+177            <intent-filter>
+177-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+178                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+178-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+178-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+179            </intent-filter>
+180            <intent-filter>
+180-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+181                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+181-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+181-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+182            </intent-filter>
+183            <intent-filter>
+183-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+184                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+184-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+184-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\itait\.gradle\caches\8.12\transforms\3fd4c0250149c8617d856b7b72b3fd1b\transformed\jetified-profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+185            </intent-filter>
+186        </receiver>
 187    </application>
 188
 189</manifest>

@@ -119,6 +119,55 @@ public final class DailyFactDao_Impl implements DailyFactDao {
     });
   }
 
+  @Override
+  public LiveData<DailyFactEntity> getLatest() {
+    final String _sql = "SELECT * FROM DailyFactEntity ORDER BY date DESC LIMIT 1";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    return __db.getInvalidationTracker().createLiveData(new String[] {"DailyFactEntity"}, false, new Callable<DailyFactEntity>() {
+      @Override
+      @Nullable
+      public DailyFactEntity call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "date");
+          final int _cursorIndexOfEn = CursorUtil.getColumnIndexOrThrow(_cursor, "en");
+          final int _cursorIndexOfHe = CursorUtil.getColumnIndexOrThrow(_cursor, "he");
+          final DailyFactEntity _result;
+          if (_cursor.moveToFirst()) {
+            _result = new DailyFactEntity();
+            _result.id = _cursor.getInt(_cursorIndexOfId);
+            if (_cursor.isNull(_cursorIndexOfDate)) {
+              _result.date = null;
+            } else {
+              _result.date = _cursor.getString(_cursorIndexOfDate);
+            }
+            if (_cursor.isNull(_cursorIndexOfEn)) {
+              _result.en = null;
+            } else {
+              _result.en = _cursor.getString(_cursorIndexOfEn);
+            }
+            if (_cursor.isNull(_cursorIndexOfHe)) {
+              _result.he = null;
+            } else {
+              _result.he = _cursor.getString(_cursorIndexOfHe);
+            }
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

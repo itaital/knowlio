@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Knowlio</string>
-    <string name="daily_fact_title">ידע יומי</string>
-    <string name="history_button">היסטוריה</string>
-    <string name="quiz_button">מבחן יומי</string>
-    <string name="sample_fact">כאן תופיע עובדה לדוגמה.</string>
-</resources>

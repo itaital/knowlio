@@ -5,6 +5,7 @@ id btnEnglish
 id btnHebrew
 id btnHistory
 id btnQuiz
+id cardDaily
 id container
 id rvHistory
 id tvDailyContent
@@ -17,3 +18,4 @@ string daily_fact_title
 string history_button
 string quiz_button
 string sample_fact
+style Shape.Corner.XLarge

@@ -1,31 +1,33 @@
 setup-script: |
-  # מעדכן רשימת חבילות
+  # מעדכן את רשימת החבילות ומתקין כלי עזר
   sudo apt-get update
+  sudo apt-get install -y wget unzip openjdk-17-jdk
 
-  # מתקין wget ו-unzip (כלי עזר להורדה ופתיחת קבצים)
-  sudo apt-get install -y wget unzip
+  # מגדיר משתנים סביבתיים ל-SDK
+  export ANDROID_SDK_ROOT=$HOME/android-sdk
+  export ANDROID_HOME=$ANDROID_SDK_ROOT
+  export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
 
-  # מגדיר תיקיית SDK
-  ANDROID_SDK_ROOT=$HOME/android-sdk
+  # יוצר את תיקיית ה-SDK
   mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
 
-  # מוריד את command-line tools העדכניות של גוגל
+  # מוריד את הכלים העדכניים ביותר של Android
   wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmd.zip
-
-  # פותח את הקובץ לתיקייה
   unzip -q cmd.zip -d $ANDROID_SDK_ROOT/cmdline-tools
-
-  # מזיז לתיקייה בשם latest (כך Google ממליצה)
   mv $ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools $ANDROID_SDK_ROOT/cmdline-tools/latest
+  rm cmd.zip
 
-  # מקבל את רישיון ה-SDK
+  # מקבל את רישיונות ה-SDK
   yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
-  # מתקין פלטפורמה 34, build-tools 34 וחבילת platform-tools (adb וכד')
+  # מתקין Android Platform 34, Build Tools ו-platform-tools
   $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
       "platforms;android-34" \
       "build-tools;34.0.0" \
       "platform-tools"
 
-  # יוצר local.properties שמצביע אל ה-SDK
+  # יוצר את הקובץ local.properties כדי ש-Gradle ימצא את ה-SDK
   echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+
+  # הנחיה ל-Codex / Copilot: ודא שכל רכיב UI ב-XML מכיל layout_width ו-layout_height
+  # Codex Note: Always include android:layout_width and android:layout_height for every View.

@@ -5,4 +5,5 @@
     <string name="history_button">History</string>
     <string name="quiz_button">Daily Quiz</string>
     <string name="sample_fact">Sample fact will appear here.</string>
+    <style name="Shape.Corner.XLarge" parent="ShapeAppearance.Material3.Corner.ExtraLarge"/>
 </resources>
