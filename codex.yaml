@@ -1,0 +1,31 @@
+setup-script: |
+  # מעדכן רשימת חבילות
+  sudo apt-get update
+
+  # מתקין wget ו-unzip (כלי עזר להורדה ופתיחת קבצים)
+  sudo apt-get install -y wget unzip
+
+  # מגדיר תיקיית SDK
+  ANDROID_SDK_ROOT=$HOME/android-sdk
+  mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
+
+  # מוריד את command-line tools העדכניות של גוגל
+  wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmd.zip
+
+  # פותח את הקובץ לתיקייה
+  unzip -q cmd.zip -d $ANDROID_SDK_ROOT/cmdline-tools
+
+  # מזיז לתיקייה בשם latest (כך Google ממליצה)
+  mv $ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools $ANDROID_SDK_ROOT/cmdline-tools/latest
+
+  # מקבל את רישיון ה-SDK
+  yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+
+  # מתקין פלטפורמה 34, build-tools 34 וחבילת platform-tools (adb וכד')
+  $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
+      "platforms;android-34" \
+      "build-tools;34.0.0" \
+      "platform-tools"
+
+  # יוצר local.properties שמצביע אל ה-SDK
+  echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
