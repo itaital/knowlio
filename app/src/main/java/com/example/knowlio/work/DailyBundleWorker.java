@@ -12,24 +12,27 @@ import androidx.preference.PreferenceManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.example.knowlio.R;
 import com.example.knowlio.activities.MainActivity;
-import com.example.knowlio.data.models.DailyFact;
 import com.example.knowlio.data.FactsRepository;
+import com.example.knowlio.data.models.DailyQuoteBundle;
+import com.example.knowlio.data.models.LanguageContent;
 import com.example.knowlio.data.network.FactsApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Locale;
 
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class DailyFetchWorker extends Worker {
+public class DailyBundleWorker extends Worker {
 
-    public DailyFetchWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+    private static final String BASE = "https://gist.githubusercontent.com/itaital/d2a78fdf63a5112ba58e530982d9f823/raw/";
+
+    public DailyBundleWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
     }
 
@@ -42,23 +45,25 @@ public class DailyFetchWorker extends Worker {
                 .setLenient()
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://gist.githubusercontent.com/itaital/734a548a728191c298d71e60afcd0dd2/")
+                .baseUrl("https://gist.githubusercontent.com/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         FactsApi api = retrofit.create(FactsApi.class);
         FactsRepository repo = new FactsRepository(getApplicationContext());
 
+        Calendar cal = Calendar.getInstance();
+        String formatted = String.format(Locale.US, "%04d_%02d_%02d",
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+        String url = BASE + "daily_knowledge_" + formatted + ".json";
+
         try {
-            Response<DailyFact> res = api.getFact().execute();
+            Response<DailyQuoteBundle> res = api.getBundle(url).execute();
             if (res.isSuccessful() && res.body() != null) {
-                DailyFact fact = res.body();
-                repo.saveFact(fact);
-                prefs.edit()
-                        .putString("cached_fact_date", fact.date)
-                        .putString("cached_fact_en", fact.en)
-                        .putString("cached_fact_he", fact.he)
-                        .apply();
-                showNotification(fact, prefs);
+                DailyQuoteBundle bundle = res.body();
+                repo.saveBundle(bundle);
+                showNotification(bundle, prefs);
+                return Result.success();
+            } else if (res.code() == 404) {
                 return Result.success();
             } else {
                 return Result.retry();
@@ -69,11 +74,15 @@ public class DailyFetchWorker extends Worker {
         }
     }
 
-    private void showNotification(DailyFact fact, SharedPreferences prefs) {
+    private void showNotification(DailyQuoteBundle bundle, SharedPreferences prefs) {
         NotificationHelper.createDailyFactChannel(getApplicationContext());
         String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
-        boolean isHeb = "he".equals(lang);
-        String text = isHeb ? fact.he : fact.en;
+        LanguageContent c = bundle.languages.get(lang);
+        if (c == null) c = bundle.languages.get("en");
+        String text = "";
+        if (c != null && c.quoteOfTheDay != null && !c.quoteOfTheDay.isEmpty()) {
+            text = c.quoteOfTheDay.get(0);
+        }
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
