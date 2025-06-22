@@ -2174,6 +2174,7 @@ int color primary_text_default_material_dark 0x7f0502f4
 int color primary_text_default_material_light 0x7f0502f5
 int color primary_text_disabled_material_dark 0x7f0502f6
 int color primary_text_disabled_material_light 0x7f0502f7
+int color purple500 0x7f050306
 int color ripple_material_dark 0x7f0502f8
 int color ripple_material_light 0x7f0502f9
 int color secondary_text_default_material_dark 0x7f0502fa
@@ -3294,12 +3295,10 @@ int id bounceStart 0x7f080065
 int id btnEnglish 0x7f080066
 int id btnHebrew 0x7f080067
 int id btnHistory 0x7f080068
-int id btnQuiz 0x7f080069
 int id buttonPanel 0x7f08006a
 int id cache_measures 0x7f08006b
 int id callMeasure 0x7f08006c
 int id cancel_button 0x7f08006d
-int id cardDaily 0x7f08006e
 int id carryVelocity 0x7f08006f
 int id center 0x7f080070
 int id centerCrop 0x7f080071
@@ -3433,6 +3432,8 @@ int id jumpToEnd 0x7f0800f0
 int id jumpToStart 0x7f0800f1
 int id labeled 0x7f0800f2
 int id layout 0x7f0800f3
+int id layoutKnowledge 0x7f08020e
+int id layoutPeople 0x7f08020f
 int id left 0x7f0800f4
 int id leftToRight 0x7f0800f5
 int id legacy 0x7f0800f6
@@ -3689,8 +3690,9 @@ int id transition_position 0x7f0801f0
 int id transition_scene_layoutid_cache 0x7f0801f1
 int id transition_transform 0x7f0801f2
 int id triangle 0x7f0801f3
-int id tvDailyContent 0x7f0801f4
-int id tvDateTitle 0x7f0801f5
+int id tvEmpty 0x7f080210
+int id tvQuote1 0x7f080211
+int id tvQuote2 0x7f080212
 int id unchecked 0x7f0801f6
 int id uniform 0x7f0801f7
 int id unlabeled 0x7f0801f8
@@ -3851,6 +3853,7 @@ int layout design_text_input_end_icon 0x7f0b002c
 int layout design_text_input_start_icon 0x7f0b002d
 int layout expand_button 0x7f0b002e
 int layout fragment_history 0x7f0b002f
+int layout fragment_home 0x7f0b0080
 int layout image_frame 0x7f0b0030
 int layout ime_base_split_test_activity 0x7f0b0031
 int layout ime_secondary_split_test_activity 0x7f0b0032

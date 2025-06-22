@@ -2175,6 +2175,7 @@ color primary_text_default_material_dark
 color primary_text_default_material_light
 color primary_text_disabled_material_dark
 color primary_text_disabled_material_light
+color purple500
 color ripple_material_dark
 color ripple_material_light
 color secondary_text_default_material_dark
@@ -3295,12 +3296,10 @@ id bounceStart
 id btnEnglish
 id btnHebrew
 id btnHistory
-id btnQuiz
 id buttonPanel
 id cache_measures
 id callMeasure
 id cancel_button
-id cardDaily
 id carryVelocity
 id center
 id centerCrop
@@ -3434,6 +3433,8 @@ id jumpToEnd
 id jumpToStart
 id labeled
 id layout
+id layoutKnowledge
+id layoutPeople
 id left
 id leftToRight
 id legacy
@@ -3690,8 +3691,9 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
-id tvDailyContent
-id tvDateTitle
+id tvEmpty
+id tvQuote1
+id tvQuote2
 id unchecked
 id uniform
 id unlabeled
@@ -3852,6 +3854,7 @@ layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout expand_button
 layout fragment_history
+layout fragment_home
 layout image_frame
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity

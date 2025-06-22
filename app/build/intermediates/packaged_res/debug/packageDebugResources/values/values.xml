@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="purple500">#9C27B0</color>
     <string name="app_name">Knowlio</string>
     <string name="daily_fact_title">Daily Knowledge</string>
     <string name="history_button">History</string>

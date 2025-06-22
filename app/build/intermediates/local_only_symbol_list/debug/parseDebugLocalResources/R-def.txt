@@ -1,18 +1,21 @@
 R_DEF: Internal format may change without notice
 local
+color purple500
 drawable ic_launcher
 id btnEnglish
 id btnHebrew
 id btnHistory
-id btnQuiz
-id cardDaily
 id container
+id layoutKnowledge
+id layoutPeople
 id rvHistory
-id tvDailyContent
-id tvDateTitle
+id tvEmpty
+id tvQuote1
+id tvQuote2
 layout activity_main
 layout activity_on_board_language
 layout fragment_history
+layout fragment_home
 string app_name
 string daily_fact_title
 string history_button

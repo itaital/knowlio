@@ -16,6 +16,10 @@
         "source": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-main-47:\\layout\\fragment_history.xml"
     },
     {
+        "merged": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-debug-45:\\layout_fragment_home.xml.flat",
+        "source": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-main-47:\\layout\\fragment_home.xml"
+    },
+    {
         "merged": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-debug-45:\\layout_activity_main.xml.flat",
         "source": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-main-47:\\layout\\activity_main.xml"
     }

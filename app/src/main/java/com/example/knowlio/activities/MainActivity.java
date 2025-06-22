@@ -17,6 +17,9 @@ import com.example.knowlio.work.DailyBundleWorker;
 import com.example.knowlio.work.DailyReminderWorker;
 
 import java.util.concurrent.TimeUnit;
+import androidx.preference.PreferenceManager;
+import android.content.SharedPreferences;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +28,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.contains("pref_lang")) {
+            prefs.edit()
+                    .putString("pref_lang", Locale.getDefault().getLanguage())
+                    .apply();
+        }
         if (android.os.Build.VERSION.SDK_INT >= 33 &&
                 ContextCompat.checkSelfPermission(this,
                         Manifest.permission.POST_NOTIFICATIONS)
