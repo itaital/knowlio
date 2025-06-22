@@ -1,14 +1,8 @@
 package com.example.knowlio.activities;
 
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.TextView;
-import android.widget.Button;
-
-import androidx.fragment.app.FragmentTransaction;
-import com.example.knowlio.fragments.HistoryFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -18,13 +12,11 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.example.knowlio.R;
-import com.example.knowlio.data.FactsRepository;
-import com.example.knowlio.work.DailyFetchWorker;
+import com.example.knowlio.fragments.HomeFragment;
+import com.example.knowlio.work.DailyBundleWorker;
 import com.example.knowlio.work.DailyReminderWorker;
 
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         /* ---------- 1.  הורדת fact אוטומטית פעם ביום ---------- */
         PeriodicWorkRequest fetchRequest =
                 new PeriodicWorkRequest.Builder(
-                        DailyFetchWorker.class,
+                        DailyBundleWorker.class,
                         24, TimeUnit.HOURS)
                         .build();
 
@@ -62,37 +54,18 @@ public class MainActivity extends AppCompatActivity {
                         DailyReminderWorker.class,
                         24, TimeUnit.HOURS)
                         .setInitialDelay(millisUntilNext14h(), TimeUnit.MILLISECONDS)
-                        //.setInitialDelay(millisUntilNext14h(), TimeUnit.MILLISECONDS) // לשימוש קבוע
                         .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "daily_reminder",
-                ExistingPeriodicWorkPolicy.REPLACE,   // בזמן בדיקה; החזר ל-KEEP אחרי שמוודא
+                ExistingPeriodicWorkPolicy.REPLACE,
                 reminderRequest);
 
-        /* ---------- 3.  הצגת fact במסך ---------- */
-        TextView tvContent = findViewById(R.id.tvDailyContent);
-        TextView tvTitle   = findViewById(R.id.tvDateTitle);
-        Button btnHistory  = findViewById(R.id.btnHistory);
-
-        btnHistory.setOnClickListener(v -> {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.container, new HistoryFragment());
-            ft.addToBackStack(null);
-            ft.commit();
-        });
-
-        FactsRepository repo = new FactsRepository(this);
-        repo.getLatest().observe(this, fact -> {
-            if (fact != null) {
-                SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-                String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
-                tvTitle.setText("\uD83D\uDCC5 Daily Knowledge — " + fact.date);
-                tvContent.setText("he".equals(lang) ? fact.he : fact.en);
-            } else {
-                tvContent.setText("⚠️ No data");
-            }
-        });
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, new HomeFragment())
+                    .commit();
+        }
     }
 
     /** כמה מילישניות נשארו עד 14:00 הקרוב. */
