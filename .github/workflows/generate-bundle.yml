@@ -1,0 +1,35 @@
+name: Generate Daily Bundle
+
+on:
+  schedule:
+    - cron: '5 0 * * *'      # כל יום ב-00:05 UTC
+  workflow_dispatch:          # מאפשר הרצה ידנית
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN_WRITE }}   # PAT עם הרשאת write
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests marko==1.2.2
+
+      - name: Generate bundle
+        run: python scripts/generate_bundle.py
+
+      - name: Commit & push bundle
+        run: |
+          git config --global user.email "bot@github"
+          git config --global user.name  "Daily Bundle Bot"
+          git add daily_knowledge_*.json
+          git commit -m "auto: add bundle $(date -u +%F)" || echo "Nothing new"
+          git push
