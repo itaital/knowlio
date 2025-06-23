@@ -37,12 +37,11 @@
                     android:text="🏆 Quote of the Day"
                     style="@style/TextAppearance.Material3.TitleMedium" />
 
-                <TextView
-                    android:id="@+id/tvQuote"
+                <LinearLayout
+                    android:id="@+id/layoutQuotes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textStyle="italic"
-                    style="@style/TextAppearance.Material3.HeadlineSmall" />
+                    android:orientation="vertical" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -65,11 +64,11 @@
                     android:text="🧠 Interesting Knowledge"
                     style="@style/TextAppearance.Material3.TitleMedium" />
 
-                <TextView
-                    android:id="@+id/tvKnowledge"
+                <LinearLayout
+                    android:id="@+id/layoutKnowledge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/TextAppearance.Material3.BodyLarge" />
+                    android:orientation="vertical" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -100,11 +99,5 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <Button
-            android:id="@+id/btnHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/history_button" />
     </LinearLayout>
 </ScrollView>

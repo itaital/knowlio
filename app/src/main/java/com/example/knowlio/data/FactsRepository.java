@@ -80,6 +80,23 @@ public class FactsRepository {
         return list.toArray(new LocalDate[0]);
     }
 
+    /** Return all dates with bundles, newest first. */
+    public LocalDate[] listDates() {
+        LocalDate[] arr = listAvailableDates();
+        List<LocalDate> list = new ArrayList<>();
+        Collections.addAll(list, arr);
+        Collections.sort(list, Collections.reverseOrder());
+        return list.toArray(new LocalDate[0]);
+    }
+
+    /** Latest saved bundle or null. */
+    @Nullable
+    public DailyQuoteBundle getLatestBundle() {
+        LocalDate[] dates = listDates();
+        if (dates.length == 0) return null;
+        return getBundle(dates[0]);
+    }
+
     public LanguageContent getTodayBundle(String lang) {
         DailyQuoteBundle b = loadBundle();
         if (b == null || b.languages == null) return null;

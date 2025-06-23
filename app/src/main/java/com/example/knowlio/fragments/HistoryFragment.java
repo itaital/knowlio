@@ -16,23 +16,21 @@ import com.example.knowlio.R;
 import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.data.models.DailyQuoteBundle;
 import com.example.knowlio.data.models.LanguageContent;
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.DateValidatorPointBackward;
+import android.widget.AutoCompleteTextView;
+import android.widget.ArrayAdapter;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
 import androidx.core.widget.TextViewCompat;
+import com.example.knowlio.data.models.KnowledgeItem;
+import android.graphics.Typeface;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Locale;
 
 public class HistoryFragment extends Fragment {
 
-    private TextInputEditText etDate;
-    private TextView tvQuote;
-    private TextView tvKnowledge;
+    private AutoCompleteTextView etDate;
+    private LinearLayout quotesLayout;
+    private LinearLayout knowledgeLayout;
     private LinearLayout peopleLayout;
     private View cardQuote, cardKnowledge, cardPeople;
     private FactsRepository repo;
@@ -46,8 +44,8 @@ public class HistoryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_history, container, false);
 
         etDate = v.findViewById(R.id.etDate);
-        tvQuote = v.findViewById(R.id.tvQuoteHistory);
-        tvKnowledge = v.findViewById(R.id.tvKnowledgeHistory);
+        quotesLayout = v.findViewById(R.id.layoutQuotesHistory);
+        knowledgeLayout = v.findViewById(R.id.layoutKnowledgeHistory);
         peopleLayout = v.findViewById(R.id.layoutPeopleHistory);
         cardQuote = v.findViewById(R.id.cardQuote);
         cardKnowledge = v.findViewById(R.id.cardKnowledge);
@@ -57,26 +55,20 @@ public class HistoryFragment extends Fragment {
         lang = PreferenceManager.getDefaultSharedPreferences(requireContext())
                 .getString("pref_lang", Locale.getDefault().getLanguage());
 
-        etDate.setOnClickListener(v1 -> openPicker());
+        setupDropdown();
 
         return v;
     }
 
-    private void openPicker() {
-        CalendarConstraints constraints = new CalendarConstraints.Builder()
-                .setValidator(DateValidatorPointBackward.now())
-                .build();
-        MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
-                .setCalendarConstraints(constraints)
-                .build();
-        picker.addOnPositiveButtonClickListener(time -> {
-            LocalDate date = Instant.ofEpochMilli(time)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            etDate.setText(date.toString());
-            showBundle(date);
+    private void setupDropdown() {
+        LocalDate[] dates = repo.listDates();
+        String[] ds = new String[dates.length];
+        for (int i = 0; i < dates.length; i++) ds[i] = dates[i].toString();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, ds);
+        etDate.setAdapter(adapter);
+        etDate.setOnItemClickListener((p, v1, pos, id) -> {
+            showBundle(LocalDate.parse(adapter.getItem(pos)));
         });
-        picker.show(getParentFragmentManager(), "picker");
     }
 
     private void showBundle(LocalDate date) {
@@ -92,15 +84,34 @@ public class HistoryFragment extends Fragment {
         LanguageContent c = bundle.languages.get(lang);
         if (c == null) c = bundle.languages.get("en");
 
+        quotesLayout.removeAllViews();
         if (c != null && c.quoteOfTheDay != null && !c.quoteOfTheDay.isEmpty()) {
-            tvQuote.setText(c.quoteOfTheDay.get(0));
+            for (String q : c.quoteOfTheDay) {
+                TextView t = new TextView(requireContext());
+                t.setText("\u275D " + q + " \u275E");
+                TextViewCompat.setTextAppearance(t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
+                t.setPadding(0, 0, 0, 12);
+                quotesLayout.addView(t);
+            }
             cardQuote.setVisibility(View.VISIBLE);
         } else {
             cardQuote.setVisibility(View.GONE);
         }
 
+        knowledgeLayout.removeAllViews();
         if (c != null && c.interestingKnowledge != null && !c.interestingKnowledge.isEmpty()) {
-            tvKnowledge.setText(c.interestingKnowledge.get(0));
+            for (KnowledgeItem item : c.interestingKnowledge) {
+                TextView title = new TextView(requireContext());
+                title.setText(item.title);
+                title.setTypeface(null, Typeface.BOLD);
+                TextViewCompat.setTextAppearance(title, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
+                TextView body = new TextView(requireContext());
+                body.setText(item.text);
+                TextViewCompat.setTextAppearance(body, com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
+                body.setPadding(0, 0, 0, 16);
+                knowledgeLayout.addView(title);
+                knowledgeLayout.addView(body);
+            }
             cardKnowledge.setVisibility(View.VISIBLE);
         } else {
             cardKnowledge.setVisibility(View.GONE);
