@@ -1,55 +1,58 @@
 #!/usr/bin/env python
-import json, requests, os
+"""
+* יוצר קובץ JSON יומי בשם daily_knowledge_YYYY_MM_DD.json
+* מעדכן (או יוצר) את הקובץ ב-Gist שצוין במשתני-הסביבה
+"""
+import json, os, requests
 from datetime import date
 from random import choice
 
-# 1. בונים את שם הקובץ
-today = date.today()
-fname = f"daily_knowledge_{today:%Y_%m_%d}.json"
+# ---------- 1. בניית התוכן ----------
+today = date.today().strftime("%Y-%m-%d")
 
-# 2. מייצרים נתונים לדוגמה
-def quote_en():
+def random_quote() -> str:
     r = requests.get("https://api.quotable.io/random", timeout=10).json()
     return f"{r['content']} – {r['author']}"
 
-fact_en = choice([
-    "Bananas are berries, but strawberries aren’t.",
-    "The Eiffel Tower can be 15 cm taller on hot days."
-])
-
 bundle = {
-    "date": f"{today:%Y-%m-%d}",
+    "date": today,
     "languages": {
         "en": {
-            "quoteOfTheDay":        [quote_en()],
-            "interestingKnowledge": [fact_en],
-            "whoWereThey":          []
+            "quoteOfTheDay":       [random_quote()],
+            "interestingKnowledge": [
+                "Bananas are berries, but strawberries aren’t.",
+                "The Eiffel Tower can be 15 cm taller on hot days."
+            ],
+            "whoWereThey": [
+                "Victor Hugo (1802-1885) – French novelist & poet.",
+                "Albert Einstein (1879-1955) – Physicist, theory of relativity."
+            ],
         },
-        "he": {
-            "quoteOfTheDay":        ["״לא החלטה – לא התקדמות.\" – פתגם עברי"],
-            "interestingKnowledge": ["לתמנון יש שלושה לבבות ותשעה מוחות."],
-            "whoWereThey":          []
-        }
-    }
+        # אפשר להוסיף שפות נוספות כאן…
+    },
 }
 
-content_str = json.dumps(bundle, ensure_ascii=False, indent=2)
+fname = f"daily_knowledge_{today.replace('-', '_')}.json"
 
-# 3. שולחים PATCH לגיסט
-gist_id   = os.environ["GIST_ID"]
-token     = os.environ["GIST_TOKEN"]
-url       = f"https://api.github.com/gists/{gist_id}"
-headers   = {
-    "Authorization": f"Bearer {token}",
-    "Accept": "application/vnd.github+json"
-}
+# ---------- 2. העלאה ל-Gist ----------
+gist_id   = os.getenv("GIST_ID")
+token     = os.getenv("GH_TOKEN")
+
+if not gist_id or not token:
+    raise SystemExit("❌ Environment variables GIST_ID / GH_TOKEN are missing")
+
+headers = {"Authorization": f"token {token}"}
+url     = f"https://api.github.com/gists/{gist_id}"
+
 payload = {
     "files": {
-        fname: { "content": content_str }
+        fname: {
+            "content": json.dumps(bundle, ensure_ascii=False, indent=2)
+        }
     },
-    "description": f"Daily bundle for {today}"
+    "description": f"Daily Knowledge bundle ({today})"
 }
 
-resp = requests.patch(url, headers=headers, data=json.dumps(payload))
+resp = requests.patch(url, headers=headers, json=payload, timeout=30)
 resp.raise_for_status()
-print("✅ uploaded", fname, "→", resp.json().get("html_url"))
+print(f"✅ Updated gist {gist_id} with {fname}")
