@@ -1,34 +1,24 @@
-name: Generate Daily Gist                       # שם הריצה כפי שיופיע ב-Actions
+name: Knowlio Daily Gist
 
 on:
-  workflow_dispatch:              # אפשר להפעיל ידנית
-  schedule:                       # וגם להריץ מדי יום
-    - cron: '5 0 * * *'           # 00:05 UTC – מתאים ל-“מחר” בכל אזור זמן
+  schedule:
+    - cron: '5 0 * * *'      # 00:05 UTC מדי יום
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. בודק את הקוד של הריפו
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # 2. מתקין Python 3.11
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # 3. מתקין את הספרייה היחידה שהסקריפט צריך
-      - name: Install requests
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
+      - run: pip install --quiet requests
 
-      # 4. מריץ את הסקריפט שכותב/מע-דכן את ה-Gist
       - name: Generate & patch gist
         env:
-          GH_TOKEN: ${{ secrets.GIST_TOKEN }}   #  ➜  מוסיף ברמת ה-repo
-        run: |
-          python scripts/generate_and_patch_gist.py
+          GIST_ID:   ${{ secrets.DAILY_GIST_ID }}     # מזהה הגיסט
+          GH_TOKEN:  ${{ secrets.DAILY_GIST_TOKEN }}  # PAT עם scope gist
+        run: python scripts/generate_and_patch_gist.py
