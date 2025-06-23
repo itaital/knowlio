@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,19 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
 import com.example.knowlio.R;
 import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.data.models.LanguageContent;
+import com.example.knowlio.data.models.KnowledgeItem;
+import android.graphics.Typeface;
 
 import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
-    private TextView tvQuote;
-    private TextView tvKnowledge;
+    private LinearLayout quotesLayout;
+    private LinearLayout knowledgeLayout;
     private LinearLayout peopleLayout;
     private TextView tvEmpty;
 
@@ -36,18 +36,11 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        tvQuote = v.findViewById(R.id.tvQuote);
-        tvKnowledge = v.findViewById(R.id.tvKnowledge);
+        quotesLayout = v.findViewById(R.id.layoutQuotes);
+        knowledgeLayout = v.findViewById(R.id.layoutKnowledge);
         peopleLayout = v.findViewById(R.id.layoutPeople);
         tvEmpty = v.findViewById(R.id.tvEmpty);
 
-        Button btnHistory = v.findViewById(R.id.btnHistory);
-        btnHistory.setOnClickListener(view -> {
-            FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.container, new HistoryFragment());
-            ft.addToBackStack(null);
-            ft.commit();
-        });
 
         return v;
     }
@@ -72,14 +65,31 @@ public class HomeFragment extends Fragment {
             tvEmpty.setVisibility(View.GONE);
         }
 
-        if (content.quoteOfTheDay != null && !content.quoteOfTheDay.isEmpty()) {
-            tvQuote.setText(content.quoteOfTheDay.get(0));
+        quotesLayout.removeAllViews();
+        if (content.quoteOfTheDay != null) {
+            for (String q : content.quoteOfTheDay) {
+                TextView t = new TextView(requireContext());
+                t.setText("\u275D " + q + " \u275E");
+                TextViewCompat.setTextAppearance(t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
+                t.setPadding(0, 0, 0, 12);
+                quotesLayout.addView(t);
+            }
         }
 
-        if (content.interestingKnowledge != null && !content.interestingKnowledge.isEmpty()) {
-            tvKnowledge.setText(content.interestingKnowledge.get(0));
-        } else {
-            tvKnowledge.setText("");
+        knowledgeLayout.removeAllViews();
+        if (content.interestingKnowledge != null) {
+            for (KnowledgeItem item : content.interestingKnowledge) {
+                TextView title = new TextView(requireContext());
+                title.setText(item.title);
+                title.setTypeface(null, Typeface.BOLD);
+                TextViewCompat.setTextAppearance(title, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
+                TextView body = new TextView(requireContext());
+                body.setText(item.text);
+                TextViewCompat.setTextAppearance(body, com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
+                body.setPadding(0, 0, 0, 16);
+                knowledgeLayout.addView(title);
+                knowledgeLayout.addView(body);
+            }
         }
 
         peopleLayout.removeAllViews();

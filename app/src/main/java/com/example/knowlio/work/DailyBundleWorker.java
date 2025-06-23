@@ -20,6 +20,9 @@ import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.data.models.DailyQuoteBundle;
 import com.example.knowlio.data.models.LanguageContent;
 import com.example.knowlio.data.network.FactsApi;
+import com.example.knowlio.data.network.QuotableApi;
+import com.example.knowlio.data.network.QuoteResponse;
+import com.example.knowlio.data.models.QuoteSection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -60,7 +63,13 @@ public class DailyBundleWorker extends Worker {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
+        Retrofit quoteRetrofit = new Retrofit.Builder()
+                .baseUrl("https://api.quotable.io/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
         FactsApi api = retrofit.create(FactsApi.class);
+        QuotableApi quoteApi = quoteRetrofit.create(QuotableApi.class);
         FactsRepository repo = new FactsRepository(getApplicationContext());
 
         /* ---------- URL של היום ---------- */
@@ -72,12 +81,35 @@ public class DailyBundleWorker extends Worker {
             Response<DailyQuoteBundle> res = api.getDaily(url).execute();
 
             if (res.isSuccessful() && res.body() != null) {
-                /* ✓ הצלחה – שומרים ומציגים */
                 DailyQuoteBundle bundle = res.body();
+
+                LanguageContent en = bundle.languages.get("en");
+                if (en != null) {
+                    if (en.quoteOfTheDay == null)
+                        en.quoteOfTheDay = new QuoteSection();
+                    int attempts = 0;
+                    while (en.quoteOfTheDay.size() < 2 && attempts < 3) {
+                        try {
+                            Response<QuoteResponse> q = quoteApi.getRandom().execute();
+                            if (q.isSuccessful() && q.body() != null) {
+                                en.quoteOfTheDay.add(q.body().content + " – " + q.body().author);
+                            }
+                        } catch (IOException ignored) {}
+                        attempts++;
+                    }
+                }
+
                 repo.saveBundle(today, bundle);
                 showNotification(bundle, prefs);
                 return Result.success();
 
+            } else if (res.code() == 404) {
+                DailyQuoteBundle b = repo.getLatestBundle();
+                if (b != null) {
+                    showNotification(b, prefs);
+                    return Result.success();
+                }
+                return Result.retry();
             } else {
                 return Result.retry();           // שגיאה אחרת – ננסה שוב
             }
