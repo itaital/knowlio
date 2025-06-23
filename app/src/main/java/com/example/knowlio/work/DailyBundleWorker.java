@@ -24,7 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -63,18 +64,17 @@ public class DailyBundleWorker extends Worker {
         FactsRepository repo = new FactsRepository(getApplicationContext());
 
         /* ---------- URL של היום ---------- */
-        Calendar cal = Calendar.getInstance();
-        String formatted = String.format(Locale.US, "%04d_%02d_%02d",
-                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
+        LocalDate today = LocalDate.now();
+        String formatted = today.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
         String url = BASE + "daily_knowledge_" + formatted + ".json";
 
         try {
-            Response<DailyQuoteBundle> res = api.getBundle(url).execute();
+            Response<DailyQuoteBundle> res = api.getDaily(url).execute();
 
             if (res.isSuccessful() && res.body() != null) {
                 /* ✓ הצלחה – שומרים ומציגים */
                 DailyQuoteBundle bundle = res.body();
-                repo.saveBundle(bundle);
+                repo.saveBundle(today, bundle);
                 showNotification(bundle, prefs);
                 return Result.success();
 

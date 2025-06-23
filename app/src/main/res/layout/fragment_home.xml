@@ -14,57 +14,44 @@
             android:id="@+id/tvEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Come back later – today’s content is not available yet"
+            android:text="@string/home_empty"
             android:visibility="gone"
             style="@style/TextAppearance.Material3.BodyLarge" />
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardQuote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:strokeWidth="0dp"
-            app:cardElevation="4dp">
+            android:layout_marginTop="16dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraLarge">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal"
                 android:padding="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📜 Quote of the Day"
-                    android:textColor="@color/purple500"
+                    android:text="🏆 Quote of the Day"
                     style="@style/TextAppearance.Material3.TitleMedium" />
 
                 <TextView
-                    android:id="@+id/tvQuote1"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvQuote"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    style="@style/TextAppearance.Material3.BodyLarge"
-                    android:paddingTop="8dp" />
-
-                <TextView
-                    android:id="@+id/tvQuote2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    style="@style/TextAppearance.Material3.BodyLarge" />
-
+                    android:textStyle="italic"
+                    style="@style/TextAppearance.Material3.HeadlineSmall" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardKnowledge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:strokeWidth="0dp"
-            app:cardElevation="4dp">
+            android:layout_marginTop="16dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraLarge">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,24 +63,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="🧠 Interesting Knowledge"
-                    android:textColor="@color/purple500"
                     style="@style/TextAppearance.Material3.TitleMedium" />
 
-                <LinearLayout
-                    android:id="@+id/layoutKnowledge"
+                <TextView
+                    android:id="@+id/tvKnowledge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-
+                    style="@style/TextAppearance.Material3.BodyLarge" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPeople"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:strokeWidth="0dp"
-            app:cardElevation="4dp">
+            android:layout_marginTop="16dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraLarge">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -105,7 +90,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="📚 Who Were They"
-                    android:textColor="@color/purple500"
                     style="@style/TextAppearance.Material3.TitleMedium" />
 
                 <LinearLayout
@@ -113,7 +97,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
-
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -121,8 +104,7 @@
             android:id="@+id/btnHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:text="@string/history_button" />
-
     </LinearLayout>
 </ScrollView>

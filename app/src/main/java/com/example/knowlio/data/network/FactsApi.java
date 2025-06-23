@@ -9,4 +9,7 @@ import retrofit2.http.Url;
 public interface FactsApi {
     @GET
     Call<DailyQuoteBundle> getBundle(@Url String url);
+
+    @GET
+    Call<DailyQuoteBundle> getDaily(@Url String rawUrl);
 }
