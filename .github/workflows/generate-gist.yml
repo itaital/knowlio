@@ -1,4 +1,4 @@
-name: build                       # שם הריצה כפי שיופיע ב-Actions
+name: Generate Daily Gist                       # שם הריצה כפי שיופיע ב-Actions
 
 on:
   workflow_dispatch:              # אפשר להפעיל ידנית
