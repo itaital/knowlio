@@ -1,0 +1,25 @@
+name: Generate Daily Gist
+
+on:
+  schedule:
+    - cron: '5 0 * * *'      # כל יום 00:05 UTC
+  workflow_dispatch:
+
+env:
+  GIST_ID: d2a78fdf63a5112ba58e530982d9f823   # ← שנה ל-ID שלך
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install requests
+
+      - name: Generate & patch gist
+        run: python scripts/generate_and_patch_gist.py
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID:    ${{ env.GIST_ID }}
