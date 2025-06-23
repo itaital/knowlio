@@ -14,6 +14,11 @@ import com.example.knowlio.data.models.DailyQuoteBundle;
 import com.example.knowlio.data.models.LanguageContent;
 import com.google.gson.Gson;
 
+import androidx.annotation.Nullable;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -35,15 +40,44 @@ public class FactsRepository {
         Executors.newSingleThreadExecutor().execute(() -> dao.insert(e));
     }
 
-    /* שמירת חבילת ציטוטים */
-    public void saveBundle(DailyQuoteBundle bundle) {
-        prefs.edit().putString("daily_bundle", gson.toJson(bundle)).apply();
+    /* שמירת חבילת ציטוטים עבור תאריך נתון */
+    public void saveBundle(LocalDate date, DailyQuoteBundle bundle) {
+        prefs.edit().putString("bundle_" + date.toString(), gson.toJson(bundle)).apply();
     }
 
+    /** גרסת נוחות המשמרת את חבילת היום */
+    public void saveBundle(DailyQuoteBundle bundle) {
+        saveBundle(LocalDate.now(), bundle);
+    }
+
+    @Nullable
     private DailyQuoteBundle loadBundle() {
-        String json = prefs.getString("daily_bundle", null);
+        return getBundle(LocalDate.now());
+    }
+
+    @Nullable
+    public DailyQuoteBundle getBundle(LocalDate date) {
+        String json = prefs.getString("bundle_" + date.toString(), null);
         if (json == null) return null;
-        try { return gson.fromJson(json, DailyQuoteBundle.class); } catch (Exception e) { return null; }
+        try {
+            return gson.fromJson(json, DailyQuoteBundle.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public LocalDate[] listAvailableDates() {
+        List<LocalDate> list = new ArrayList<>();
+        for (String k : prefs.getAll().keySet()) {
+            if (k.startsWith("bundle_")) {
+                String d = k.substring(7);
+                try {
+                    list.add(LocalDate.parse(d));
+                } catch (Exception ignored) { }
+            }
+        }
+        Collections.sort(list);
+        return list.toArray(new LocalDate[0]);
     }
 
     public LanguageContent getTodayBundle(String lang) {

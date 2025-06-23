@@ -4,4 +4,7 @@
     <string name="quiz_button">מבחן יומי</string>
     <string name="history_button">היסטוריה</string>
     <string name="sample_fact">כאן תופיע עובדה לדוגמה.</string>
+    <string name="home_empty">חזור מאוחר יותר – תוכן היום עדיין לא זמין</string>
+    <string name="select_date">בחר תאריך</string>
+    <string name="no_data">אין נתונים לתאריך הנבחר</string>
 </resources>
