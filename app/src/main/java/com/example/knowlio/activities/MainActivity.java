@@ -111,6 +111,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.menu_about) {
             showAboutDialog();
             return true;
+        } else if (id == R.id.menu_fetch_now) {
+            androidx.work.OneTimeWorkRequest req =
+                    new androidx.work.OneTimeWorkRequest.Builder(DailyBundleWorker.class)
+                            .build();
+            androidx.work.WorkManager.getInstance(this).enqueue(req);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

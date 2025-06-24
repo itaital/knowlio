@@ -67,6 +67,16 @@ public class DailyBundleWorker extends Worker {
         QuotableApi  quoteApi  = quoteRetrofit.create(QuotableApi.class);
         FactsRepository repo   = new FactsRepository(getApplicationContext());
 
+        // fetch history once per run
+        try {
+            retrofit2.Response<com.google.gson.JsonElement> hRes =
+                    factsApi.getRaw(BASE + "cache_history.json").execute();
+            if (hRes.isSuccessful() && hRes.body() != null) {
+                DailyQuoteBundle[] arr = new Gson().fromJson(hRes.body(), DailyQuoteBundle[].class);
+                repo.saveHistory(java.util.Arrays.asList(arr));
+            }
+        } catch (IOException ignored) { }
+
         /* ---------- build today’s URL ---------- */
         LocalDate today      = LocalDate.now();
         String    formatted  = today.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
@@ -97,7 +107,7 @@ public class DailyBundleWorker extends Worker {
                     }
                 }
 
-                repo.saveBundle(bundle);        // **original repository API**
+                repo.saveBundle(bundle);
                 showNotification(bundle, prefs);
                 return Result.success();
 

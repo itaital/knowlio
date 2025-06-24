@@ -4,4 +4,5 @@
     <item android:id="@+id/menu_language" android:title="@string/menu_language" />
     <item android:id="@+id/menu_feedback" android:title="@string/menu_feedback" />
     <item android:id="@+id/menu_about" android:title="@string/menu_about" />
+    <item android:id="@+id/menu_fetch_now" android:title="@string/menu_fetch_now" />
 </menu>
