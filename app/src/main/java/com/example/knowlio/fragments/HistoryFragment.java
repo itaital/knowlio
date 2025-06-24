@@ -55,19 +55,21 @@ public class HistoryFragment extends Fragment {
         lang = PreferenceManager.getDefaultSharedPreferences(requireContext())
                 .getString("pref_lang", Locale.getDefault().getLanguage());
 
-        setupDropdown();
-
         return v;
     }
 
-    private void setupDropdown() {
-        java.util.List<java.time.LocalDate> dates = repo.listDates();
-        String[] ds = new String[dates.size()];
-        for (int i = 0; i < dates.size(); i++) ds[i] = dates.get(i).toString();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, ds);
-        etDate.setAdapter(adapter);
-        etDate.setOnItemClickListener((p, v1, pos, id) -> {
-            showBundle(LocalDate.parse(adapter.getItem(pos)));
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        repo.listDatesLive().observe(getViewLifecycleOwner(), dates -> {
+            if (dates == null) return;
+            String[] ds = new String[dates.size()];
+            for (int i = 0; i < dates.size(); i++) ds[i] = dates.get(i).toString();
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, ds);
+            etDate.setAdapter(adapter);
+            etDate.setOnItemClickListener((p, v1, pos, id) -> {
+                showBundle(LocalDate.parse(adapter.getItem(pos)));
+            });
         });
     }
 

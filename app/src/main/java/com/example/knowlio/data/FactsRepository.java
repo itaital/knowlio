@@ -85,6 +85,11 @@ public class FactsRepository {
                 });
     }
 
+    /** Convenience wrapper used by the UI */
+    public LiveData<DailyQuoteBundle> getBundleLive(LocalDate date) {
+        return observeBundle(date);
+    }
+
     @Nullable
     private DailyQuoteBundle loadBundle() {
         return getBundle(LocalDate.now());
@@ -92,17 +97,17 @@ public class FactsRepository {
 
     @Nullable
     public DailyQuoteBundle getBundle(LocalDate date) {
-        String json = bundleDao.getJson(date.toString());
-        if (json == null) return null;
+        DailyBundleEntity e = bundleDao.getByDate(date.toString());
+        if (e == null || e.json == null) return null;
         try {
-            return gson.fromJson(json, DailyQuoteBundle.class);
-        } catch (Exception e) {
+            return gson.fromJson(e.json, DailyQuoteBundle.class);
+        } catch (Exception ex) {
             return null;
         }
     }
 
     public List<LocalDate> listAvailableDates() {
-        List<String> ds = bundleDao.listDates();
+        List<String> ds = bundleDao.listDatesSync();
         List<LocalDate> list = new ArrayList<>();
         for (String d : ds) {
             try {
@@ -110,6 +115,23 @@ public class FactsRepository {
             } catch (Exception ignored) { }
         }
         return list;
+    }
+
+    /** Live list of all available dates, newest first. */
+    public LiveData<List<LocalDate>> listDatesLive() {
+        return androidx.lifecycle.Transformations.map(
+                bundleDao.listDates(),
+                ds -> {
+                    List<LocalDate> list = new ArrayList<>();
+                    if (ds != null) {
+                        for (String d : ds) {
+                            try {
+                                list.add(LocalDate.parse(d));
+                            } catch (Exception ignored) {}
+                        }
+                    }
+                    return list;
+                });
     }
 
     /** Return all dates with bundles, newest first. */
