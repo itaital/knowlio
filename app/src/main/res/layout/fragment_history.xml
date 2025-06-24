@@ -12,7 +12,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dropdownLayout"
-            style="?attr/exposedDropdownMenuStyle"
+            style="@style/Widget.Material3.ExposedDropdownMenu.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/select_date">
