@@ -30,7 +30,13 @@ jobs:
 
       # הפעל את הסקריפט שמייצר ומעדכן את הגיסט
       - name: Generate & patch gist
+        id: bundle
         env:
           GIST_ID:  d2a78fdf63a5112ba58e530982d9f823   # ← כאן הדבק את ה-hash של הגיסט שלך
           GH_TOKEN: ${{ secrets.GH_TOKEN_WRITE }}      # נשאר הטוקן היחיד
-        run: python scripts/generate_and_patch_gist.py
+        run: |
+          python scripts/generate_and_patch_gist.py
+          echo "path=daily_knowledge_$(date +%Y_%m_%d).json" >> "$GITHUB_OUTPUT"
+
+      - name: Validate schema
+        run: python scripts/test_schema.py "${{ steps.bundle.outputs.path }}"
