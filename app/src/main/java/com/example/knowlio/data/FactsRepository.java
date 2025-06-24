@@ -8,6 +8,8 @@ import androidx.preference.PreferenceManager;
 
 import com.example.knowlio.data.db.DailyFactDao;
 import com.example.knowlio.data.db.DailyFactEntity;
+import com.example.knowlio.data.db.DailyBundleDao;
+import com.example.knowlio.data.db.DailyBundleEntity;
 import com.example.knowlio.data.db.KnowlioDb;
 import com.example.knowlio.data.models.DailyFact;
 import com.example.knowlio.data.models.DailyQuoteBundle;
@@ -25,12 +27,14 @@ import java.util.concurrent.Executors;
 public class FactsRepository {
 
     private final DailyFactDao dao;
+    private final DailyBundleDao bundleDao;
     private final SharedPreferences prefs;
     private final Gson gson = new Gson();
 
     public FactsRepository(Context ctx) {
         KnowlioDb db = KnowlioDb.getInstance(ctx);
         dao = db.dailyFactDao();
+        bundleDao = db.dailyBundleDao();
         prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
     }
 
@@ -42,12 +46,43 @@ public class FactsRepository {
 
     /* שמירת חבילת ציטוטים עבור תאריך נתון */
     public void saveBundle(LocalDate date, DailyQuoteBundle bundle) {
-        prefs.edit().putString("bundle_" + date.toString(), gson.toJson(bundle)).apply();
+        DailyBundleEntity e = new DailyBundleEntity();
+        e.date = date.toString();
+        e.json = gson.toJson(bundle);
+        Executors.newSingleThreadExecutor().execute(() -> bundleDao.insert(e));
     }
 
     /** גרסת נוחות המשמרת את חבילת היום */
     public void saveBundle(DailyQuoteBundle bundle) {
         saveBundle(LocalDate.now(), bundle);
+    }
+
+    /** שמירת היסטוריית חבילות */
+    public void saveHistory(List<DailyQuoteBundle> bundles) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            for (DailyQuoteBundle b : bundles) {
+                if (b != null && b.date != null) {
+                    DailyBundleEntity e = new DailyBundleEntity();
+                    e.date = b.date;
+                    e.json = gson.toJson(b);
+                    bundleDao.insert(e);
+                }
+            }
+        });
+    }
+
+    /** Observe bundle for a given date as LiveData. */
+    public LiveData<DailyQuoteBundle> observeBundle(LocalDate date) {
+        return androidx.lifecycle.Transformations.map(
+                bundleDao.observeJson(date.toString()),
+                json -> {
+                    if (json == null) return null;
+                    try {
+                        return gson.fromJson(json, DailyQuoteBundle.class);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                });
     }
 
     @Nullable
@@ -57,7 +92,7 @@ public class FactsRepository {
 
     @Nullable
     public DailyQuoteBundle getBundle(LocalDate date) {
-        String json = prefs.getString("bundle_" + date.toString(), null);
+        String json = bundleDao.getJson(date.toString());
         if (json == null) return null;
         try {
             return gson.fromJson(json, DailyQuoteBundle.class);
@@ -66,35 +101,30 @@ public class FactsRepository {
         }
     }
 
-    public LocalDate[] listAvailableDates() {
+    public List<LocalDate> listAvailableDates() {
+        List<String> ds = bundleDao.listDates();
         List<LocalDate> list = new ArrayList<>();
-        for (String k : prefs.getAll().keySet()) {
-            if (k.startsWith("bundle_")) {
-                String d = k.substring(7);
-                try {
-                    list.add(LocalDate.parse(d));
-                } catch (Exception ignored) { }
-            }
+        for (String d : ds) {
+            try {
+                list.add(LocalDate.parse(d));
+            } catch (Exception ignored) { }
         }
-        Collections.sort(list);
-        return list.toArray(new LocalDate[0]);
+        return list;
     }
 
     /** Return all dates with bundles, newest first. */
-    public LocalDate[] listDates() {
-        LocalDate[] arr = listAvailableDates();
-        List<LocalDate> list = new ArrayList<>();
-        Collections.addAll(list, arr);
+    public List<LocalDate> listDates() {
+        List<LocalDate> list = new ArrayList<>(listAvailableDates());
         Collections.sort(list, Collections.reverseOrder());
-        return list.toArray(new LocalDate[0]);
+        return list;
     }
 
     /** Latest saved bundle or null. */
     @Nullable
     public DailyQuoteBundle getLatestBundle() {
-        LocalDate[] dates = listDates();
-        if (dates.length == 0) return null;
-        return getBundle(dates[0]);
+        List<LocalDate> dates = listDates();
+        if (dates.isEmpty()) return null;
+        return getBundle(dates.get(0));
     }
 
     public LanguageContent getTodayBundle(String lang) {

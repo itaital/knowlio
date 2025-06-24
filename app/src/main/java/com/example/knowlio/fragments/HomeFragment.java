@@ -46,18 +46,23 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        loadData();
-    }
-
-    private void loadData() {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
 
         FactsRepository repo = new FactsRepository(requireContext());
-        LanguageContent content = repo.getTodayBundle(lang);
+        repo.observeBundle(java.time.LocalDate.now()).observe(getViewLifecycleOwner(), bundle -> {
+            LanguageContent content = null;
+            if (bundle != null && bundle.languages != null) {
+                content = bundle.languages.get(lang);
+                if (content == null) content = bundle.languages.get("en");
+            }
+            showContent(content);
+        });
+    }
 
+    private void showContent(@Nullable LanguageContent content) {
         if (content == null) {
             tvEmpty.setVisibility(View.VISIBLE);
             return;

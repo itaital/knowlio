@@ -61,9 +61,9 @@ public class HistoryFragment extends Fragment {
     }
 
     private void setupDropdown() {
-        LocalDate[] dates = repo.listDates();
-        String[] ds = new String[dates.length];
-        for (int i = 0; i < dates.length; i++) ds[i] = dates[i].toString();
+        java.util.List<java.time.LocalDate> dates = repo.listDates();
+        String[] ds = new String[dates.size()];
+        for (int i = 0; i < dates.size(); i++) ds[i] = dates.get(i).toString();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, ds);
         etDate.setAdapter(adapter);
         etDate.setOnItemClickListener((p, v1, pos, id) -> {
