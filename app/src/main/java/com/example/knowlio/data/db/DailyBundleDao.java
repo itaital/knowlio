@@ -16,9 +16,15 @@ public interface DailyBundleDao {
     @Query("SELECT json FROM DailyBundleEntity WHERE date = :date LIMIT 1")
     String getJson(String date);
 
+    @Query("SELECT * FROM DailyBundleEntity WHERE date = :date LIMIT 1")
+    DailyBundleEntity getByDate(String date);
+
     @Query("SELECT json FROM DailyBundleEntity WHERE date = :date LIMIT 1")
     LiveData<String> observeJson(String date);
 
-    @Query("SELECT date FROM DailyBundleEntity ORDER BY date DESC")
-    List<String> listDates();
+    @Query("SELECT DISTINCT date FROM DailyBundleEntity ORDER BY date DESC")
+    LiveData<List<String>> listDates();
+
+    @Query("SELECT DISTINCT date FROM DailyBundleEntity ORDER BY date DESC")
+    List<String> listDatesSync();
 }

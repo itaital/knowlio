@@ -108,6 +108,7 @@ public class DailyBundleWorker extends Worker {
                 }
 
                 repo.saveBundle(bundle);
+                prefs.edit().putString("last_fetch", today.toString()).apply();
                 showNotification(bundle, prefs);
                 return Result.success();
 

@@ -18,6 +18,7 @@ import com.example.knowlio.R;
 import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.data.models.LanguageContent;
 import com.example.knowlio.data.models.KnowledgeItem;
+import com.example.knowlio.data.models.DailyQuoteBundle;
 import android.graphics.Typeface;
 
 import java.util.Locale;
@@ -27,6 +28,7 @@ public class HomeFragment extends Fragment {
     private LinearLayout quotesLayout;
     private LinearLayout knowledgeLayout;
     private LinearLayout peopleLayout;
+    private View cardQuote, cardKnowledge, cardPeople;
     private TextView tvEmpty;
 
     @Nullable
@@ -39,6 +41,9 @@ public class HomeFragment extends Fragment {
         quotesLayout = v.findViewById(R.id.layoutQuotes);
         knowledgeLayout = v.findViewById(R.id.layoutKnowledge);
         peopleLayout = v.findViewById(R.id.layoutPeople);
+        cardQuote = v.findViewById(R.id.cardQuote);
+        cardKnowledge = v.findViewById(R.id.cardKnowledge);
+        cardPeople = v.findViewById(R.id.cardPeople);
         tvEmpty = v.findViewById(R.id.tvEmpty);
 
 
@@ -52,26 +57,27 @@ public class HomeFragment extends Fragment {
         String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
 
         FactsRepository repo = new FactsRepository(requireContext());
-        repo.observeBundle(java.time.LocalDate.now()).observe(getViewLifecycleOwner(), bundle -> {
-            LanguageContent content = null;
-            if (bundle != null && bundle.languages != null) {
-                content = bundle.languages.get(lang);
-                if (content == null) content = bundle.languages.get("en");
-            }
-            showContent(content);
+        java.time.LocalDate today = java.time.LocalDate.now();
+        repo.getBundleLive(today).observe(getViewLifecycleOwner(), bundle -> {
+            showBundle(bundle, lang);
         });
     }
 
-    private void showContent(@Nullable LanguageContent content) {
-        if (content == null) {
+    private void showBundle(@Nullable DailyQuoteBundle bundle, String lang) {
+        if (bundle == null) {
             tvEmpty.setVisibility(View.VISIBLE);
+            cardQuote.setVisibility(View.GONE);
+            cardKnowledge.setVisibility(View.GONE);
+            cardPeople.setVisibility(View.GONE);
             return;
-        } else {
-            tvEmpty.setVisibility(View.GONE);
         }
 
+        tvEmpty.setVisibility(View.GONE);
+        LanguageContent content = bundle.languages.get(lang);
+        if (content == null) content = bundle.languages.get("en");
+
         quotesLayout.removeAllViews();
-        if (content.quoteOfTheDay != null) {
+        if (content != null && content.quoteOfTheDay != null && !content.quoteOfTheDay.isEmpty()) {
             for (String q : content.quoteOfTheDay) {
                 TextView t = new TextView(requireContext());
                 t.setText("\u275D " + q + " \u275E");
@@ -79,10 +85,13 @@ public class HomeFragment extends Fragment {
                 t.setPadding(0, 0, 0, 12);
                 quotesLayout.addView(t);
             }
+            cardQuote.setVisibility(View.VISIBLE);
+        } else {
+            cardQuote.setVisibility(View.GONE);
         }
 
         knowledgeLayout.removeAllViews();
-        if (content.interestingKnowledge != null) {
+        if (content != null && content.interestingKnowledge != null && !content.interestingKnowledge.isEmpty()) {
             for (KnowledgeItem item : content.interestingKnowledge) {
                 TextView title = new TextView(requireContext());
                 title.setText(item.title);
@@ -95,10 +104,13 @@ public class HomeFragment extends Fragment {
                 knowledgeLayout.addView(title);
                 knowledgeLayout.addView(body);
             }
+            cardKnowledge.setVisibility(View.VISIBLE);
+        } else {
+            cardKnowledge.setVisibility(View.GONE);
         }
 
         peopleLayout.removeAllViews();
-        if (content.whoWereThey != null) {
+        if (content != null && content.whoWereThey != null && !content.whoWereThey.isEmpty()) {
             for (String item : content.whoWereThey) {
                 TextView t = new TextView(requireContext());
                 t.setText("• " + item);
@@ -106,6 +118,9 @@ public class HomeFragment extends Fragment {
                 t.setPadding(0, 0, 0, 12);
                 peopleLayout.addView(t);
             }
+            cardPeople.setVisibility(View.VISIBLE);
+        } else {
+            cardPeople.setVisibility(View.GONE);
         }
     }
 }

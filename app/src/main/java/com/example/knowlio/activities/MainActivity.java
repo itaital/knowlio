@@ -101,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.container, new com.example.knowlio.fragments.HistoryFragment())
                     .addToBackStack(null)
                     .commit();
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
             return true;
         } else if (id == R.id.menu_language) {
             showLanguageDialog();
@@ -160,6 +163,20 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage(msg)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0 && getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
     }
 
     /** כמה מילישניות נשארו עד 14:00 הקרוב. */
