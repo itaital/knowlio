@@ -9,9 +9,8 @@
 לוג: כל שלב מדפיס מקור (PRIMARY / BACKUP / CACHE).
 """
 
-import json, os, requests, warnings, sys
+import json, os, requests, sys
 from datetime import date
-from random import choice
 
 # ─────────────── הגדרות סביבתיות ───────────────
 GIST_ID  = os.getenv("GIST_ID")
@@ -80,18 +79,30 @@ if not quote_en or not fact_en:
     print("‼️  Falling back to CACHE")
     if history:
         latest = sorted(history, key=lambda b: b["date"])[-1]
-        quote_en = quote_en or latest["languages"]["en"]["quoteOfTheDay"][0]
-        fact_en  = fact_en  or latest["languages"]["en"]["interestingKnowledge"][0]
+        if not quote_en:
+            quote_en = latest["languages"]["en"]["quoteOfTheDay"][0]
+        if not fact_en:
+            ik = latest["languages"]["en"]["interestingKnowledge"][0]
+            fact_en = ik["text"] if isinstance(ik, dict) else ik
     else:
         quote_en = quote_en or "Knowledge is power. – Francis Bacon"
         fact_en  = fact_en  or "Bananas are berries, but strawberries aren’t."
+
+quote_list = [quote_en, "Knowledge is power. – Francis Bacon"]
+knowledge_list = [
+    {"title": "Did You Know?", "text": fact_en},
+    {
+        "title": "Extra Fact",
+        "text": "Bananas are berries, but strawberries aren’t."
+    }
+]
 
 bundle_today = {
     "date": f"{today:%Y-%m-%d}",
     "languages": {
         "en": {
-            "quoteOfTheDay":        [quote_en],
-            "interestingKnowledge": [fact_en],
+            "quoteOfTheDay":        quote_list,
+            "interestingKnowledge": knowledge_list,
             "whoWereThey":          []
         },
         "he": {
@@ -113,6 +124,9 @@ payload = {
         history_name:  { "content": json.dumps(history, ensure_ascii=False, indent=2) }
     }
 }
+
+with open(fname, "w", encoding="utf-8") as f:
+    json.dump(bundle_today, f, ensure_ascii=False, indent=2)
 
 print("⬆️  Uploading to Gist …")
 requests.patch(GIST_URL, headers=HEADERS, json=payload, timeout=30).raise_for_status()
