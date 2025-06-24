@@ -4,7 +4,14 @@
     <string name="app_name">Knowlio</string>
     <string name="daily_fact_title">Daily Knowledge</string>
     <string name="history_button">History</string>
+    <string name="home_empty">Come back later – today’s content is not available yet</string>
+    <string name="menu_about">About</string>
+    <string name="menu_feedback">Feedback</string>
+    <string name="menu_language">Language</string>
+    <string name="no_data">No data for selected date</string>
+    <string name="no_mail">No mail app found</string>
     <string name="quiz_button">Daily Quiz</string>
     <string name="sample_fact">Sample fact will appear here.</string>
+    <string name="select_date">Select date</string>
     <style name="Shape.Corner.XLarge" parent="ShapeAppearance.Material3.Corner.ExtraLarge"/>
 </resources>

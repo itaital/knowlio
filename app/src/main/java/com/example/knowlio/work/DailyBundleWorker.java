@@ -9,9 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -19,10 +16,10 @@ import com.example.knowlio.activities.MainActivity;
 import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.data.models.DailyQuoteBundle;
 import com.example.knowlio.data.models.LanguageContent;
+import com.example.knowlio.data.models.QuoteSection;
 import com.example.knowlio.data.network.FactsApi;
 import com.example.knowlio.data.network.QuotableApi;
 import com.example.knowlio.data.network.QuoteResponse;
-import com.example.knowlio.data.models.QuoteSection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,97 +27,99 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/* ⭐ אם NotificationHelper נמצא בחבילה אחרת – עדכן את ה-import */
-import com.example.knowlio.work.NotificationHelper;
-
 public class DailyBundleWorker extends Worker {
 
+    /** root of your secret Gist **/
     private static final String BASE =
             "https://gist.githubusercontent.com/itaital/d2a78fdf63a5112ba58e530982d9f823/raw/";
 
-    public DailyBundleWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+    public DailyBundleWorker(@NonNull Context context,
+                             @NonNull WorkerParameters params) {
         super(context, params);
     }
 
-    @NonNull
-    @Override
+    /*───────────────────────────────────────────────────────────────────────*/
+    @NonNull @Override
     public Result doWork() {
 
         SharedPreferences prefs =
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        /* ---------- Retrofit ---------- */
+        /* ---------- Retrofit wrappers ---------- */
         Gson gson = new GsonBuilder().setLenient().create();
 
-        Retrofit retrofit = new Retrofit.Builder()
+        Retrofit gistRetrofit = new Retrofit.Builder()
                 .baseUrl("https://gist.githubusercontent.com/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         Retrofit quoteRetrofit = new Retrofit.Builder()
                 .baseUrl("https://api.quotable.io/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        FactsApi api = retrofit.create(FactsApi.class);
-        QuotableApi quoteApi = quoteRetrofit.create(QuotableApi.class);
-        FactsRepository repo = new FactsRepository(getApplicationContext());
+        FactsApi     factsApi  = gistRetrofit .create(FactsApi.class);
+        QuotableApi  quoteApi  = quoteRetrofit.create(QuotableApi.class);
+        FactsRepository repo   = new FactsRepository(getApplicationContext());
 
-        /* ---------- URL של היום ---------- */
-        LocalDate today = LocalDate.now();
-        String formatted = today.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
-        String url = BASE + "daily_knowledge_" + formatted + ".json";
+        /* ---------- build today’s URL ---------- */
+        LocalDate today      = LocalDate.now();
+        String    formatted  = today.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
+        String    bundleUrl  = BASE + "daily_knowledge_" + formatted + ".json";
 
         try {
-            Response<DailyQuoteBundle> res = api.getDaily(url).execute();
+            Response<DailyQuoteBundle> res = factsApi.getDaily(bundleUrl).execute();
 
             if (res.isSuccessful() && res.body() != null) {
+                /* got the bundle of the day -------------------------------- */
                 DailyQuoteBundle bundle = res.body();
 
+                // make sure there are 2 quotes – top-up from Quotable if needed
                 LanguageContent en = bundle.languages.get("en");
                 if (en != null) {
                     if (en.quoteOfTheDay == null)
                         en.quoteOfTheDay = new QuoteSection();
-                    int attempts = 0;
-                    while (en.quoteOfTheDay.size() < 2 && attempts < 3) {
+                    int guard = 0;
+                    while (en.quoteOfTheDay.size() < 2 && guard < 3) {
                         try {
                             Response<QuoteResponse> q = quoteApi.getRandom().execute();
                             if (q.isSuccessful() && q.body() != null) {
-                                en.quoteOfTheDay.add(q.body().content + " – " + q.body().author);
+                                en.quoteOfTheDay.add(
+                                        q.body().content + " – " + q.body().author);
                             }
                         } catch (IOException ignored) {}
-                        attempts++;
+                        guard++;
                     }
                 }
 
-                repo.saveBundle(today, bundle);
+                repo.saveBundle(bundle);        // **original repository API**
                 showNotification(bundle, prefs);
                 return Result.success();
 
             } else if (res.code() == 404) {
-                DailyQuoteBundle b = repo.getLatestBundle();
-                if (b != null) {
-                    showNotification(b, prefs);
+                /* nothing for today – fallback to latest cached bundle ----- */
+                DailyQuoteBundle cached = repo.getLatestBundle();
+                if (cached != null) {
+                    showNotification(cached, prefs);
                     return Result.success();
                 }
                 return Result.retry();
             } else {
-                return Result.retry();           // שגיאה אחרת – ננסה שוב
+                return Result.retry();          // unknown HTTP error
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Result.retry();               // כשל רשת – ננסה שוב
+        } catch (IOException io) {
+            io.printStackTrace();
+            return Result.retry();              // network trouble – try again later
         }
-    }   //  ←←←  כאן היה חסר הסוגר
+    }
 
-    /* --------------------------------------------------------------------- */
+    /*───────────────────────── helper ─────────────────────────*/
     private void showNotification(DailyQuoteBundle bundle, SharedPreferences prefs) {
 
         NotificationHelper.createDailyFactChannel(getApplicationContext());
@@ -128,33 +127,33 @@ public class DailyBundleWorker extends Worker {
         String lang = prefs.getString("pref_lang",
                 Locale.getDefault().getLanguage());
 
-        LanguageContent c = bundle.languages.get(lang);
-        if (c == null) c = bundle.languages.get("en");
+        LanguageContent block = bundle.languages.getOrDefault(lang,
+                bundle.languages.get("en"));
 
-        String text = "";
-        if (c != null && c.quoteOfTheDay != null && !c.quoteOfTheDay.isEmpty()) {
-            text = c.quoteOfTheDay.get(0);
-        }
+        String text = (block != null && block.quoteOfTheDay != null
+                && !block.quoteOfTheDay.isEmpty())
+                ? block.quoteOfTheDay.get(0)
+                : "";
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(
+        PendingIntent pi = PendingIntent.getActivity(
                 getApplicationContext(), 0, intent,
                 PendingIntent.FLAG_IMMUTABLE);
 
-        NotificationCompat.Builder builder =
+        NotificationCompat.Builder nb =
                 new NotificationCompat.Builder(getApplicationContext(),
                         NotificationHelper.CHANNEL_ID)
                         .setSmallIcon(android.R.drawable.ic_dialog_info)
                         .setContentTitle("Knowlio • Daily Knowledge")
                         .setContentText(text)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
-                        .setContentIntent(pendingIntent)
+                        .setContentIntent(pi)
                         .setAutoCancel(true);
 
         NotificationManagerCompat.from(getApplicationContext())
-                .notify(1001, builder.build());
+                .notify(1001, nb.build());
     }
 }

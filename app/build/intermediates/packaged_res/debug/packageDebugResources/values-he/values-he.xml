@@ -3,6 +3,13 @@
     <string name="app_name">Knowlio</string>
     <string name="daily_fact_title">ידע יומי</string>
     <string name="history_button">היסטוריה</string>
+    <string name="home_empty">חזור מאוחר יותר – תוכן היום עדיין לא זמין</string>
+    <string name="menu_about">אודות</string>
+    <string name="menu_feedback">משוב</string>
+    <string name="menu_language">שפה</string>
+    <string name="no_data">אין נתונים לתאריך הנבחר</string>
+    <string name="no_mail">לא נמצאה אפליקציית דואר</string>
     <string name="quiz_button">מבחן יומי</string>
     <string name="sample_fact">כאן תופיע עובדה לדוגמה.</string>
+    <string name="select_date">בחר תאריך</string>
 </resources>

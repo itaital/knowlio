@@ -3295,11 +3295,13 @@ id bounceEnd
 id bounceStart
 id btnEnglish
 id btnHebrew
-id btnHistory
 id buttonPanel
 id cache_measures
 id callMeasure
 id cancel_button
+id cardKnowledge
+id cardPeople
+id cardQuote
 id carryVelocity
 id center
 id centerCrop
@@ -3363,6 +3365,7 @@ id dragLeft
 id dragRight
 id dragStart
 id dragUp
+id dropdownLayout
 id dropdown_menu
 id easeIn
 id easeInOut
@@ -3378,6 +3381,7 @@ id endToStart
 id enterAlways
 id enterAlwaysCollapsed
 id escape
+id etDate
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
@@ -3434,7 +3438,11 @@ id jumpToStart
 id labeled
 id layout
 id layoutKnowledge
+id layoutKnowledgeHistory
 id layoutPeople
+id layoutPeopleHistory
+id layoutQuotes
+id layoutQuotesHistory
 id left
 id leftToRight
 id legacy
@@ -3471,6 +3479,10 @@ id material_timepicker_ok_button
 id material_timepicker_view
 id material_value_index
 id matrix
+id menu_about
+id menu_feedback
+id menu_history
+id menu_language
 id message
 id middle
 id mini
@@ -3576,7 +3588,6 @@ id right_side
 id rounded
 id row_index_key
 id rtl
-id rvHistory
 id save_non_transition_alpha
 id save_overlay_view
 id sawtooth
@@ -3677,6 +3688,7 @@ id title
 id titleDividerNoCustom
 id title_template
 id toggle
+id toolbar
 id top
 id topPanel
 id touch_outside
@@ -3692,8 +3704,6 @@ id transition_scene_layoutid_cache
 id transition_transform
 id triangle
 id tvEmpty
-id tvQuote1
-id tvQuote2
 id unchecked
 id uniform
 id unlabeled
@@ -3935,6 +3945,7 @@ layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
+menu menu_main
 plurals mtrl_badge_content_description
 string abc_action_bar_home_description
 string abc_action_bar_up_description
@@ -3993,6 +4004,7 @@ string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string hide_bottom_view_on_scroll_behavior
 string history_button
+string home_empty
 string icon_content_description
 string item_view_role_description
 string m3_exceed_max_badge_text_suffix
@@ -4033,6 +4045,9 @@ string material_timepicker_minute
 string material_timepicker_pm
 string material_timepicker_select_time
 string material_timepicker_text_input_mode_description
+string menu_about
+string menu_feedback
+string menu_language
 string mtrl_badge_numberless_content_description
 string mtrl_checkbox_button_icon_path_checked
 string mtrl_checkbox_button_icon_path_group_name
@@ -4095,6 +4110,8 @@ string mtrl_switch_track_decoration_path
 string mtrl_switch_track_path
 string mtrl_timepicker_cancel
 string mtrl_timepicker_confirm
+string no_data
+string no_mail
 string not_set
 string password_toggle_content_description
 string path_password_eye
@@ -4108,6 +4125,7 @@ string search_menu_title
 string searchbar_scrolling_view_behavior
 string searchview_clear_text_content_description
 string searchview_navigation_content_description
+string select_date
 string side_sheet_accessibility_pane_title
 string side_sheet_behavior
 string status_bar_notification_info_overflow

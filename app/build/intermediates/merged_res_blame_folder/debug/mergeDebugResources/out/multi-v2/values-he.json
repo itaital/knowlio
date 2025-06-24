@@ -6,18 +6,18 @@
                 {
                     "source": "C:\\Users\\itait\\Downloads\\Knowlio_skeleton\\Knowlio\\app\\src\\main\\res\\values-he\\strings.xml",
                     "from": {
-                        "startLines": "1,2,4,3,5",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "16,61,165,115,217",
-                        "endColumns": "44,53,51,49,63",
-                        "endOffsets": "56,110,212,160,276"
+                        "startLines": "1,2,4,6,11,10,9,8,12,3,5,7",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "17,63,169,287,576,528,481,420,622,118,222,369",
+                        "endColumns": "44,53,51,80,44,46,45,59,59,49,63,49",
+                        "endOffsets": "57,112,216,363,616,570,522,475,677,163,281,414"
                     },
                     "to": {
-                        "startLines": "2,3,4,5,6",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "55,100,154,206,256",
-                        "endColumns": "44,53,51,49,63",
-                        "endOffsets": "95,149,201,251,315"
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,100,154,206,287,332,379,425,485,545,595,659",
+                        "endColumns": "44,53,51,80,44,46,45,59,59,49,63,49",
+                        "endOffsets": "95,149,201,282,327,374,420,480,540,590,654,704"
                     }
                 }
             ]

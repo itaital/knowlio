@@ -4,7 +4,7 @@
             "outputFile": "com.example.knowlio.app-mergeDebugResources-43:/values-ldrtl-v17/values-ldrtl-v17.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\itait\\.gradle\\caches\\8.12\\transforms\\b1592ff034f5737aca51420bc6942b7f\\transformed\\material-1.12.0\\res\\values-ldrtl-v17\\values-ldrtl-v17.xml",
+                    "source": "C:\\Users\\itait\\.gradle\\caches\\8.12\\transforms\\e85164968b3058400ad55ec295d9c0c8\\transformed\\material-1.12.0-rc01\\res\\values-ldrtl-v17\\values-ldrtl-v17.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

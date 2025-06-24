@@ -4,7 +4,7 @@ ADDED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\Androi
 INJECTED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\AndroidManifest.xml:2:1-23:12
 INJECTED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\AndroidManifest.xml:2:1-23:12
 INJECTED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\AndroidManifest.xml:2:1-23:12
-MERGED from [com.google.android.material:material:1.12.0] C:\Users\itait\.gradle\caches\8.12\transforms\b1592ff034f5737aca51420bc6942b7f\transformed\material-1.12.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.material:material:1.12.0-rc01] C:\Users\itait\.gradle\caches\8.12\transforms\e85164968b3058400ad55ec295d9c0c8\transformed\material-1.12.0-rc01\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.2.0] C:\Users\itait\.gradle\caches\8.12\transforms\8a0f27d0ccbc247092eaffaf223e7298\transformed\constraintlayout-2.2.0\AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.preference:preference:1.2.1] C:\Users\itait\.gradle\caches\8.12\transforms\1f43d8eac2466a2bc0f749a8ef31a4c8\transformed\preference-1.2.1\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.7.0] C:\Users\itait\.gradle\caches\8.12\transforms\1c9a7bf05f40591fb0a85b369826904d\transformed\jetified-appcompat-resources-1.7.0\AndroidManifest.xml:2:1-7:12
@@ -26,7 +26,7 @@ MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0] C:\Users\itai
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.7.0] C:\Users\itait\.gradle\caches\8.12\transforms\72e944525b63e350f4a736c277edc9ba\transformed\lifecycle-livedata-core-2.7.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\itait\.gradle\caches\8.12\transforms\4497a6bd0e074ed95777a92c05227d56\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:17:1-35:12
 MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.2.0] C:\Users\itait\.gradle\caches\8.12\transforms\ec1d42a9383cdc79ed7926f9d39d407e\transformed\slidingpanelayout-1.2.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.transition:transition:1.5.0] C:\Users\itait\.gradle\caches\8.12\transforms\95ce866c4c0269104b550468d9ea011c\transformed\transition-1.5.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.transition:transition:1.5.0-rc01] C:\Users\itait\.gradle\caches\8.12\transforms\2a6a161747ad23b05e9094e50c75dab7\transformed\transition-1.5.0-rc01\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\74cf476dfcacf841fd7a8f4348f4fc5f\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\b5cfa8ee1f7fd43e0cd3b6f214b06d48\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\5625dc4d28d5d78e6efcb47eaf965e3c\transformed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
@@ -80,8 +80,8 @@ ADDED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\Androi
 application
 ADDED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\AndroidManifest.xml:8:5-22:19
 INJECTED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\AndroidManifest.xml:8:5-22:19
-MERGED from [com.google.android.material:material:1.12.0] C:\Users\itait\.gradle\caches\8.12\transforms\b1592ff034f5737aca51420bc6942b7f\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.material:material:1.12.0] C:\Users\itait\.gradle\caches\8.12\transforms\b1592ff034f5737aca51420bc6942b7f\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.12.0-rc01] C:\Users\itait\.gradle\caches\8.12\transforms\e85164968b3058400ad55ec295d9c0c8\transformed\material-1.12.0-rc01\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.12.0-rc01] C:\Users\itait\.gradle\caches\8.12\transforms\e85164968b3058400ad55ec295d9c0c8\transformed\material-1.12.0-rc01\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.2.0] C:\Users\itait\.gradle\caches\8.12\transforms\8a0f27d0ccbc247092eaffaf223e7298\transformed\constraintlayout-2.2.0\AndroidManifest.xml:7:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.2.0] C:\Users\itait\.gradle\caches\8.12\transforms\8a0f27d0ccbc247092eaffaf223e7298\transformed\constraintlayout-2.2.0\AndroidManifest.xml:7:5-20
 MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\itait\.gradle\caches\8.12\transforms\f0c9bacb22054824deb44d18906d11b2\transformed\work-runtime-2.9.0\AndroidManifest.xml:28:5-143:19
@@ -140,8 +140,8 @@ uses-sdk
 INJECTED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\AndroidManifest.xml
 INJECTED from C:\Users\itait\Downloads\Knowlio_skeleton\Knowlio\app\src\main\AndroidManifest.xml
-MERGED from [com.google.android.material:material:1.12.0] C:\Users\itait\.gradle\caches\8.12\transforms\b1592ff034f5737aca51420bc6942b7f\transformed\material-1.12.0\AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.material:material:1.12.0] C:\Users\itait\.gradle\caches\8.12\transforms\b1592ff034f5737aca51420bc6942b7f\transformed\material-1.12.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.12.0-rc01] C:\Users\itait\.gradle\caches\8.12\transforms\e85164968b3058400ad55ec295d9c0c8\transformed\material-1.12.0-rc01\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.12.0-rc01] C:\Users\itait\.gradle\caches\8.12\transforms\e85164968b3058400ad55ec295d9c0c8\transformed\material-1.12.0-rc01\AndroidManifest.xml:20:5-44
 MERGED from [androidx.constraintlayout:constraintlayout:2.2.0] C:\Users\itait\.gradle\caches\8.12\transforms\8a0f27d0ccbc247092eaffaf223e7298\transformed\constraintlayout-2.2.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.constraintlayout:constraintlayout:2.2.0] C:\Users\itait\.gradle\caches\8.12\transforms\8a0f27d0ccbc247092eaffaf223e7298\transformed\constraintlayout-2.2.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.preference:preference:1.2.1] C:\Users\itait\.gradle\caches\8.12\transforms\1f43d8eac2466a2bc0f749a8ef31a4c8\transformed\preference-1.2.1\AndroidManifest.xml:20:5-22:41
@@ -184,8 +184,8 @@ MERGED from [androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\itait\.gradle\
 MERGED from [androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\itait\.gradle\caches\8.12\transforms\4497a6bd0e074ed95777a92c05227d56\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:21:5-44
 MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.2.0] C:\Users\itait\.gradle\caches\8.12\transforms\ec1d42a9383cdc79ed7926f9d39d407e\transformed\slidingpanelayout-1.2.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.2.0] C:\Users\itait\.gradle\caches\8.12\transforms\ec1d42a9383cdc79ed7926f9d39d407e\transformed\slidingpanelayout-1.2.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.transition:transition:1.5.0] C:\Users\itait\.gradle\caches\8.12\transforms\95ce866c4c0269104b550468d9ea011c\transformed\transition-1.5.0\AndroidManifest.xml:5:5-44
-MERGED from [androidx.transition:transition:1.5.0] C:\Users\itait\.gradle\caches\8.12\transforms\95ce866c4c0269104b550468d9ea011c\transformed\transition-1.5.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.transition:transition:1.5.0-rc01] C:\Users\itait\.gradle\caches\8.12\transforms\2a6a161747ad23b05e9094e50c75dab7\transformed\transition-1.5.0-rc01\AndroidManifest.xml:5:5-44
+MERGED from [androidx.transition:transition:1.5.0-rc01] C:\Users\itait\.gradle\caches\8.12\transforms\2a6a161747ad23b05e9094e50c75dab7\transformed\transition-1.5.0-rc01\AndroidManifest.xml:5:5-44
 MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\74cf476dfcacf841fd7a8f4348f4fc5f\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\74cf476dfcacf841fd7a8f4348f4fc5f\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\itait\.gradle\caches\8.12\transforms\b5cfa8ee1f7fd43e0cd3b6f214b06d48\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44

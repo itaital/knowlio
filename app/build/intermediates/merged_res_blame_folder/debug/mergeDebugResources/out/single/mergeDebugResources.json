@@ -1,26 +1,26 @@
 [
     {
-        "merged": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-debug-45:\\layout_activity_on_board_language.xml.flat",
-        "source": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-main-47:\\layout\\activity_on_board_language.xml"
+        "merged": "com.example.knowlio.app-debug-45:/layout_fragment_home.xml.flat",
+        "source": "com.example.knowlio.app-main-47:/layout/fragment_home.xml"
     },
     {
         "merged": "com.example.knowlio.app-debug-45:/layout_activity_main.xml.flat",
         "source": "com.example.knowlio.app-main-47:/layout/activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-debug-45:\\drawable_ic_launcher.xml.flat",
-        "source": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-main-47:\\drawable\\ic_launcher.xml"
+        "merged": "com.example.knowlio.app-debug-45:/layout_activity_on_board_language.xml.flat",
+        "source": "com.example.knowlio.app-main-47:/layout/activity_on_board_language.xml"
     },
     {
-        "merged": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-debug-45:\\layout_fragment_history.xml.flat",
-        "source": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-main-47:\\layout\\fragment_history.xml"
+        "merged": "com.example.knowlio.app-debug-45:/layout_fragment_history.xml.flat",
+        "source": "com.example.knowlio.app-main-47:/layout/fragment_history.xml"
     },
     {
-        "merged": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-debug-45:\\layout_fragment_home.xml.flat",
-        "source": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-main-47:\\layout\\fragment_home.xml"
+        "merged": "com.example.knowlio.app-debug-45:/drawable_ic_launcher.xml.flat",
+        "source": "com.example.knowlio.app-main-47:/drawable/ic_launcher.xml"
     },
     {
-        "merged": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-debug-45:\\layout_activity_main.xml.flat",
-        "source": "C:\\Users\\itait\\.gradle\\daemon\\8.12\\com.example.knowlio.app-main-47:\\layout\\activity_main.xml"
+        "merged": "com.example.knowlio.app-debug-45:/menu_menu_main.xml.flat",
+        "source": "com.example.knowlio.app-main-47:/menu/menu_main.xml"
     }
 ]

@@ -10,14 +10,16 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- correct style for filled-box exposed dropdown -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dropdownLayout"
-            style="?attr/exposedDropdownMenuStyle"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/select_date">
 
-            <AutoCompleteTextView
+            <!-- MUST be MaterialAutoCompleteTextView -->
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/etDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -38,10 +40,10 @@
                 android:padding="16dp">
 
                 <TextView
+                    style="@style/TextAppearance.Material3.TitleMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🏆 Quote of the Day"
-                    style="@style/TextAppearance.Material3.TitleMedium" />
+                    android:text="🏆 Quote of the Day" />
 
                 <LinearLayout
                     android:id="@+id/layoutQuotesHistory"
@@ -66,10 +68,10 @@
                 android:padding="16dp">
 
                 <TextView
+                    style="@style/TextAppearance.Material3.TitleMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🧠 Interesting Knowledge"
-                    style="@style/TextAppearance.Material3.TitleMedium" />
+                    android:text="🧠 Interesting Knowledge" />
 
                 <LinearLayout
                     android:id="@+id/layoutKnowledgeHistory"
@@ -94,10 +96,10 @@
                 android:padding="16dp">
 
                 <TextView
+                    style="@style/TextAppearance.Material3.TitleMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📚 Who Were They"
-                    style="@style/TextAppearance.Material3.TitleMedium" />
+                    android:text="📚 Who Were They" />
 
                 <LinearLayout
                     android:id="@+id/layoutPeopleHistory"
