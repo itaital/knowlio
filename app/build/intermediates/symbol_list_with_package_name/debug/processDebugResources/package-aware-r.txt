@@ -3481,6 +3481,7 @@ id material_value_index
 id matrix
 id menu_about
 id menu_feedback
+id menu_fetch_now
 id menu_history
 id menu_language
 id message
@@ -4047,6 +4048,7 @@ string material_timepicker_select_time
 string material_timepicker_text_input_mode_description
 string menu_about
 string menu_feedback
+string menu_fetch_now
 string menu_language
 string mtrl_badge_numberless_content_description
 string mtrl_checkbox_button_icon_path_checked

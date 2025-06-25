@@ -18,6 +18,7 @@ id layoutQuotes
 id layoutQuotesHistory
 id menu_about
 id menu_feedback
+id menu_fetch_now
 id menu_history
 id menu_language
 id toolbar
@@ -33,6 +34,7 @@ string history_button
 string home_empty
 string menu_about
 string menu_feedback
+string menu_fetch_now
 string menu_language
 string no_data
 string no_mail

@@ -26,20 +26,24 @@ import java.util.Set;
 public final class KnowlioDb_Impl extends KnowlioDb {
   private volatile DailyFactDao _dailyFactDao;
 
+  private volatile DailyBundleDao _dailyBundleDao;
+
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(1) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `DailyFactEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` TEXT, `en` TEXT, `he` TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `DailyBundleEntity` (`date` TEXT NOT NULL, `json` TEXT, PRIMARY KEY(`date`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5024f7b7e499f74159f5958d0f380a1a')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '905de6620271d343839855dd7b21a6a9')");
       }
 
       @Override
       public void dropAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS `DailyFactEntity`");
+        db.execSQL("DROP TABLE IF EXISTS `DailyBundleEntity`");
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
           for (RoomDatabase.Callback _callback : _callbacks) {
@@ -97,9 +101,21 @@ public final class KnowlioDb_Impl extends KnowlioDb {
                   + " Expected:\n" + _infoDailyFactEntity + "\n"
                   + " Found:\n" + _existingDailyFactEntity);
         }
+        final HashMap<String, TableInfo.Column> _columnsDailyBundleEntity = new HashMap<String, TableInfo.Column>(2);
+        _columnsDailyBundleEntity.put("date", new TableInfo.Column("date", "TEXT", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDailyBundleEntity.put("json", new TableInfo.Column("json", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysDailyBundleEntity = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesDailyBundleEntity = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoDailyBundleEntity = new TableInfo("DailyBundleEntity", _columnsDailyBundleEntity, _foreignKeysDailyBundleEntity, _indicesDailyBundleEntity);
+        final TableInfo _existingDailyBundleEntity = TableInfo.read(db, "DailyBundleEntity");
+        if (!_infoDailyBundleEntity.equals(_existingDailyBundleEntity)) {
+          return new RoomOpenHelper.ValidationResult(false, "DailyBundleEntity(com.example.knowlio.data.db.DailyBundleEntity).\n"
+                  + " Expected:\n" + _infoDailyBundleEntity + "\n"
+                  + " Found:\n" + _existingDailyBundleEntity);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "5024f7b7e499f74159f5958d0f380a1a", "0aa4a3fc70be215938f91ed3d5cbec4d");
+    }, "905de6620271d343839855dd7b21a6a9", "b4b38ec45c83f3e84f03807a1efafcca");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -110,7 +126,7 @@ public final class KnowlioDb_Impl extends KnowlioDb {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "DailyFactEntity");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "DailyFactEntity","DailyBundleEntity");
   }
 
   @Override
@@ -120,6 +136,7 @@ public final class KnowlioDb_Impl extends KnowlioDb {
     try {
       super.beginTransaction();
       _db.execSQL("DELETE FROM `DailyFactEntity`");
+      _db.execSQL("DELETE FROM `DailyBundleEntity`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
@@ -135,6 +152,7 @@ public final class KnowlioDb_Impl extends KnowlioDb {
   protected Map<Class<?>, List<Class<?>>> getRequiredTypeConverters() {
     final HashMap<Class<?>, List<Class<?>>> _typeConvertersMap = new HashMap<Class<?>, List<Class<?>>>();
     _typeConvertersMap.put(DailyFactDao.class, DailyFactDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(DailyBundleDao.class, DailyBundleDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -163,6 +181,20 @@ public final class KnowlioDb_Impl extends KnowlioDb {
           _dailyFactDao = new DailyFactDao_Impl(this);
         }
         return _dailyFactDao;
+      }
+    }
+  }
+
+  @Override
+  public DailyBundleDao dailyBundleDao() {
+    if (_dailyBundleDao != null) {
+      return _dailyBundleDao;
+    } else {
+      synchronized(this) {
+        if(_dailyBundleDao == null) {
+          _dailyBundleDao = new DailyBundleDao_Impl(this);
+        }
+        return _dailyBundleDao;
       }
     }
   }

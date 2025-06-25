@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -108,6 +109,9 @@ public class DailyBundleWorker extends Worker {
                 }
 
                 repo.saveBundle(bundle);
+
+                Log.d("KNOWLIO", "Worker saved bundle: " + bundle.date
+                        + " | quotes=" + bundle.languages.get("en").quoteOfTheDay.size());
                 prefs.edit().putString("last_fetch", today.toString()).apply();
                 showNotification(bundle, prefs);
                 return Result.success();

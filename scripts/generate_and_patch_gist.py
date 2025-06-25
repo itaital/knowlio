@@ -82,7 +82,6 @@ if not quote_en or not fact_en:
         if not quote_en:
             quote_en = latest["languages"]["en"]["quoteOfTheDay"][0]
         if not fact_en:
-            ik = latest["languages"]["en"]["interestingKnowledge"][0]
             fact_en = ik["text"] if isinstance(ik, dict) else ik
     else:
         quote_en = quote_en or "Knowledge is power. – Francis Bacon"
@@ -90,11 +89,8 @@ if not quote_en or not fact_en:
 
 quote_list = [quote_en, "Knowledge is power. – Francis Bacon"]
 knowledge_list = [
-    {"title": "Did You Know?", "text": fact_en},
-    {
-        "title": "Extra Fact",
-        "text": "Bananas are berries, but strawberries aren’t."
-    }
+    fact_en,
+    "Bananas are berries, but strawberries aren’t."
 ]
 
 bundle_today = {
