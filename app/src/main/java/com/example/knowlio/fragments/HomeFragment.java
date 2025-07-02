@@ -1,6 +1,7 @@
 package com.example.knowlio.fragments;
 
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +18,12 @@ import androidx.preference.PreferenceManager;
 import com.example.knowlio.R;
 import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.data.models.LanguageContent;
-import com.example.knowlio.data.models.KnowledgeItem;
-import android.graphics.Typeface;
 
 import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
-    private LinearLayout quotesLayout;
-    private LinearLayout knowledgeLayout;
-    private LinearLayout peopleLayout;
+    private LinearLayout quotesLayout, knowledgeLayout, peopleLayout;
     private TextView tvEmpty;
 
     @Nullable
@@ -36,69 +33,71 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        quotesLayout = v.findViewById(R.id.layoutQuotes);
-        knowledgeLayout = v.findViewById(R.id.layoutKnowledge);
-        peopleLayout = v.findViewById(R.id.layoutPeople);
-        tvEmpty = v.findViewById(R.id.tvEmpty);
-
+        quotesLayout     = v.findViewById(R.id.layoutQuotes);
+        knowledgeLayout  = v.findViewById(R.id.layoutKnowledge);
+        peopleLayout     = v.findViewById(R.id.layoutPeople);
+        tvEmpty          = v.findViewById(R.id.tvEmpty);
 
         return v;
     }
 
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
         loadData();
     }
 
+    /** Loads today’s bundle from SharedPreferences ➜ displays it. */
     private void loadData() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
 
         FactsRepository repo = new FactsRepository(requireContext());
-        LanguageContent content = repo.getTodayBundle(lang);
+        LanguageContent c = repo.getTodayBundle(lang);
 
-        if (content == null) {
+        if (c == null) {
             tvEmpty.setVisibility(View.VISIBLE);
+            quotesLayout.removeAllViews();
+            knowledgeLayout.removeAllViews();
+            peopleLayout.removeAllViews();
             return;
-        } else {
-            tvEmpty.setVisibility(View.GONE);
         }
+        tvEmpty.setVisibility(View.GONE);
 
+        /* ── Quote(s) ───────────────────────── */
         quotesLayout.removeAllViews();
-        if (content.quoteOfTheDay != null) {
-            for (String q : content.quoteOfTheDay) {
+        if (c.quoteOfTheDay != null && !c.quoteOfTheDay.isEmpty()) {
+            for (String q : c.quoteOfTheDay) {
                 TextView t = new TextView(requireContext());
                 t.setText("\u275D " + q + " \u275E");
-                TextViewCompat.setTextAppearance(t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
-                t.setPadding(0, 0, 0, 12);
+                TextViewCompat.setTextAppearance(
+                        t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
+                t.setPadding(0,0,0,12);
                 quotesLayout.addView(t);
             }
         }
 
+        /* ── Interesting knowledge (Strings) ── */
         knowledgeLayout.removeAllViews();
-        if (content.interestingKnowledge != null) {
-            for (KnowledgeItem item : content.interestingKnowledge) {
-                TextView title = new TextView(requireContext());
-                title.setText(item.title);
-                title.setTypeface(null, Typeface.BOLD);
-                TextViewCompat.setTextAppearance(title, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
-                TextView body = new TextView(requireContext());
-                body.setText(item.text);
-                TextViewCompat.setTextAppearance(body, com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
-                body.setPadding(0, 0, 0, 16);
-                knowledgeLayout.addView(title);
-                knowledgeLayout.addView(body);
+        if (c.interestingKnowledge != null && !c.interestingKnowledge.isEmpty()) {
+            for (String k : c.interestingKnowledge) {
+                TextView t = new TextView(requireContext());
+                t.setText("• " + k);
+                TextViewCompat.setTextAppearance(
+                        t, com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
+                t.setPadding(0,0,0,12);
+                knowledgeLayout.addView(t);
             }
         }
 
+        /* ── Who were they (Strings) ────────── */
         peopleLayout.removeAllViews();
-        if (content.whoWereThey != null) {
-            for (String item : content.whoWereThey) {
+        if (c.whoWereThey != null && !c.whoWereThey.isEmpty()) {
+            for (String p : c.whoWereThey) {
                 TextView t = new TextView(requireContext());
-                t.setText("• " + item);
-                TextViewCompat.setTextAppearance(t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
-                t.setPadding(0, 0, 0, 12);
+                t.setText("• " + p);
+                TextViewCompat.setTextAppearance(
+                        t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
+                t.setPadding(0,0,0,12);
                 peopleLayout.addView(t);
             }
         }

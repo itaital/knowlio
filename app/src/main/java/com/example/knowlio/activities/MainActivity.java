@@ -15,13 +15,15 @@ import android.widget.Toast;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.example.knowlio.R;
 import com.example.knowlio.BuildConfig;
 import com.example.knowlio.fragments.HomeFragment;
-import com.example.knowlio.work.DailyBundleWorker;
+import com.example.knowlio.work.DailyBundleWorker;   // ← הוסף שורה זו
+
 import com.example.knowlio.work.DailyReminderWorker;
 
 import java.util.concurrent.TimeUnit;
@@ -38,7 +40,12 @@ public class MainActivity extends AppCompatActivity {
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        OneTimeWorkRequest req = new OneTimeWorkRequest.Builder(DailyBundleWorker.class).build();
+        WorkManager.getInstance(this).enqueue(req);
+
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!prefs.contains("pref_lang")) {
             prefs.edit()
                     .putString("pref_lang", Locale.getDefault().getLanguage())
