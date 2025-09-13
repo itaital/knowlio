@@ -33,4 +33,4 @@ jobs:
         env:
           GIST_ID:  d2a78fdf63a5112ba58e530982d9f823   # ← כאן הדבק את ה-hash של הגיסט שלך
           GH_TOKEN: ${{ secrets.GH_TOKEN_WRITE }}      # נשאר הטוקן היחיד
-        run: python scripts/generate_and_patch_gist.py --require-who
+        run: python scripts/generate_and_patch_gist.py --require-who --num-quotes 2 --num-facts 5 --fact-min-words 90 --fact-max-words 140 --min-total-words 700 --max-total-words 1300

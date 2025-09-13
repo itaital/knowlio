@@ -22,6 +22,7 @@ import com.example.knowlio.data.models.LanguageContent;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Locale;
 
 public class HistoryFragment extends Fragment {
@@ -82,30 +83,44 @@ public class HistoryFragment extends Fragment {
 
         LanguageContent c = b.languages.getOrDefault(lang, b.languages.get("en"));
 
-        /* Quotes */
+        /* Quotes - prefer new quotes field */
         quotesLayout.removeAllViews();
-        if (c.quoteOfTheDay != null && !c.quoteOfTheDay.isEmpty()) {
-            for (String q : c.quoteOfTheDay) {
+        List<String> quotesToDisplay = (c.quotes != null && !c.quotes.isEmpty()) ? c.quotes : c.quoteOfTheDay;
+        
+        if (quotesToDisplay != null && !quotesToDisplay.isEmpty()) {
+            for (String q : quotesToDisplay) {
                 TextView t = new TextView(requireContext());
-                t.setText("\u275D " + q + " \u275E");
+                t.setText("• " + q);
                 TextViewCompat.setTextAppearance(
                         t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
-                t.setPadding(0,0,0,12);
+                t.setPadding(0,0,0,16);
+                t.setLineSpacing(4, 1.2f);
                 quotesLayout.addView(t);
             }
             cardQuote.setVisibility(View.VISIBLE);
         } else cardQuote.setVisibility(View.GONE);
 
-        /* Interesting knowledge (Strings) */
+        /* Interesting knowledge (Multi-paragraph facts) */
         knowledgeLayout.removeAllViews();
         if (c.interestingKnowledge != null && !c.interestingKnowledge.isEmpty()) {
-            for (String k : c.interestingKnowledge) {
+            for (int i = 0; i < c.interestingKnowledge.size(); i++) {
+                String k = c.interestingKnowledge.get(i);
                 TextView t = new TextView(requireContext());
                 t.setText("• " + k);
                 TextViewCompat.setTextAppearance(
                         t, com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
-                t.setPadding(0,0,0,12);
+                t.setPadding(0,0,0,24);
+                t.setLineSpacing(6, 1.3f);
+                t.setMaxLines(Integer.MAX_VALUE);
                 knowledgeLayout.addView(t);
+                
+                // Add spacing between facts
+                if (i < c.interestingKnowledge.size() - 1) {
+                    View spacer = new View(requireContext());
+                    spacer.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, 16));
+                    knowledgeLayout.addView(spacer);
+                }
             }
             cardKnowledge.setVisibility(View.VISIBLE);
         } else cardKnowledge.setVisibility(View.GONE);

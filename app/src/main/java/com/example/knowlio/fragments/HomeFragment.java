@@ -20,6 +20,7 @@ import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.data.models.LanguageContent;
 
 import java.util.Locale;
+import java.util.List;
 import java.time.LocalDate;
 import android.util.Log;
 
@@ -124,29 +125,45 @@ public class HomeFragment extends Fragment {
             }
             tvEmpty.setVisibility(View.GONE);
 
-        /* ── Quote(s) ───────────────────────── */
+        /* ── Quote(s) - prefer new quotes field ──────── */
         quotesLayout.removeAllViews();
-        if (c.quoteOfTheDay != null && !c.quoteOfTheDay.isEmpty()) {
-            for (String q : c.quoteOfTheDay) {
+        List<String> quotesToDisplay = (c.quotes != null && !c.quotes.isEmpty()) ? c.quotes : c.quoteOfTheDay;
+        
+        if (quotesToDisplay != null && !quotesToDisplay.isEmpty()) {
+            Log.d("HomeFragment", "📝 Displaying " + quotesToDisplay.size() + " quotes");
+            for (String q : quotesToDisplay) {
                 TextView t = new TextView(requireContext());
-                t.setText("\u275D " + q + " \u275E");
+                t.setText("• " + q);
                 TextViewCompat.setTextAppearance(
                         t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
-                t.setPadding(0,0,0,12);
+                t.setPadding(0,0,0,16);
+                t.setLineSpacing(4, 1.2f); // Improved line spacing
                 quotesLayout.addView(t);
             }
         }
 
-        /* ── Interesting knowledge (Strings) ── */
+        /* ── Interesting knowledge (Multi-paragraph facts) ── */
         knowledgeLayout.removeAllViews();
         if (c.interestingKnowledge != null && !c.interestingKnowledge.isEmpty()) {
-            for (String k : c.interestingKnowledge) {
+            Log.d("HomeFragment", "🧠 Displaying " + c.interestingKnowledge.size() + " interesting facts");
+            for (int i = 0; i < c.interestingKnowledge.size(); i++) {
+                String k = c.interestingKnowledge.get(i);
                 TextView t = new TextView(requireContext());
                 t.setText("• " + k);
                 TextViewCompat.setTextAppearance(
                         t, com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
-                t.setPadding(0,0,0,12);
+                t.setPadding(0,0,0,24); // More padding between facts
+                t.setLineSpacing(6, 1.3f); // Better line spacing for multi-line content
+                t.setMaxLines(Integer.MAX_VALUE); // Remove any line limits
                 knowledgeLayout.addView(t);
+                
+                // Add extra spacing between facts
+                if (i < c.interestingKnowledge.size() - 1) {
+                    View spacer = new View(requireContext());
+                    spacer.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, 16));
+                    knowledgeLayout.addView(spacer);
+                }
             }
         }
 
