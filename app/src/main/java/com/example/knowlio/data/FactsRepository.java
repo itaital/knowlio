@@ -98,7 +98,19 @@ public class FactsRepository {
     }
 
     public LanguageContent getTodayBundle(String lang) {
-        DailyQuoteBundle b = loadBundle();
+        // Always try to get the most recent bundle available
+        DailyQuoteBundle b = getLatestBundle();
+        
+        if (b == null) {
+            // If no latest bundle, try today's bundle
+            b = loadBundle();
+            if (b != null) {
+                android.util.Log.d("FactsRepository", "Using today's bundle: " + b.date);
+            }
+        } else {
+            android.util.Log.d("FactsRepository", "Using most recent available bundle: " + b.date);
+        }
+        
         if (b == null || b.languages == null) return null;
         LanguageContent c = b.languages.get(lang);
         if (c == null) c = b.languages.get("en");

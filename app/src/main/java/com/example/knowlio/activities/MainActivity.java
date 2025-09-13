@@ -3,6 +3,7 @@ package com.example.knowlio.activities;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -18,6 +19,7 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+import java.util.concurrent.TimeUnit;
 
 import com.example.knowlio.R;
 import com.example.knowlio.BuildConfig;
@@ -26,23 +28,64 @@ import com.example.knowlio.work.DailyBundleWorker;   // ← הוסף שורה ז
 
 import com.example.knowlio.work.DailyReminderWorker;
 
-import java.util.concurrent.TimeUnit;
 import androidx.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    
+    private android.content.BroadcastReceiver syncCompleteReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        OneTimeWorkRequest req = new OneTimeWorkRequest.Builder(DailyBundleWorker.class).build();
-        WorkManager.getInstance(this).enqueue(req);
+        // Enqueue immediate sync on app start with network constraint and expedited execution
+        OneTimeWorkRequest immediateSyncRequest = new OneTimeWorkRequest.Builder(DailyBundleWorker.class)
+                .setConstraints(new androidx.work.Constraints.Builder()
+                        .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+                        .build())
+                .setExpedited(androidx.work.OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .build();
+        
+        WorkManager.getInstance(this).enqueueUniqueWork(
+                "syncDailyNow",
+                androidx.work.ExistingWorkPolicy.REPLACE,
+                immediateSyncRequest);
+        
+        // Add manual sync button to toolbar
+        toolbar.setNavigationIcon(android.R.drawable.ic_menu_more);
+        toolbar.setNavigationOnClickListener(v -> {
+            // Manual sync button clicked
+            OneTimeWorkRequest manualSyncRequest = new OneTimeWorkRequest.Builder(DailyBundleWorker.class)
+                    .setConstraints(new androidx.work.Constraints.Builder()
+                            .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+                            .build())
+                    .setExpedited(androidx.work.OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                    .build();
+            
+            WorkManager.getInstance(this).enqueueUniqueWork(
+                    "manualSync",
+                    androidx.work.ExistingWorkPolicy.REPLACE,
+                    manualSyncRequest);
+            
+            Toast.makeText(this, "🔄 Manual sync started!", Toast.LENGTH_SHORT).show();
+            
+            // Try to register broadcast receiver for sync completion
+            try {
+                registerSyncCompleteReceiver();
+            } catch (Exception e) {
+                android.util.Log.e("MainActivity", "❌ Failed to register broadcast receiver, using fallback", e);
+                // Fallback: schedule a delayed UI refresh
+                scheduleFallbackUIRefresh();
+            }
+        });
 
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -62,17 +105,8 @@ public class MainActivity extends AppCompatActivity {
                     123);
         }
 
-        /* ---------- 1.  הורדת fact אוטומטית פעם ביום ---------- */
-        PeriodicWorkRequest fetchRequest =
-                new PeriodicWorkRequest.Builder(
-                        DailyBundleWorker.class,
-                        24, TimeUnit.HOURS)
-                        .build();
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                "daily_fetch",
-                ExistingPeriodicWorkPolicy.KEEP,
-                fetchRequest);
+        // Daily periodic sync is now handled in App.onCreate()
+        // No need to schedule it here anymore
 
         /* ---------- 2.  התראת תזכורת יומית ---------- */
         PeriodicWorkRequest reminderRequest =
@@ -177,5 +211,172 @@ public class MainActivity extends AppCompatActivity {
             cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
         }
         return cal.getTimeInMillis() - now;
+    }
+    
+    /**
+     * Registers broadcast receiver to listen for sync completion
+     */
+    private void registerSyncCompleteReceiver() {
+        try {
+            android.util.Log.d("MainActivity", "🔧 Starting to register sync complete receiver...");
+            
+            if (syncCompleteReceiver != null) {
+                try {
+                    unregisterReceiver(syncCompleteReceiver);
+                    android.util.Log.d("MainActivity", "🔧 Unregistered previous receiver");
+                } catch (Exception e) {
+                    android.util.Log.e("MainActivity", "Error unregistering previous receiver", e);
+                }
+            }
+            
+            syncCompleteReceiver = new android.content.BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    try {
+                        android.util.Log.d("MainActivity", "📡 Broadcast received: " + intent.getAction());
+                        
+                        if ("com.example.knowlio.SYNC_COMPLETE".equals(intent.getAction())) {
+                            String bundleDate = intent.getStringExtra("bundle_date");
+                            long syncTimestamp = intent.getLongExtra("sync_timestamp", 0);
+                            
+                            android.util.Log.d("MainActivity", "📡 Received sync complete broadcast for bundle: " + bundleDate);
+                            
+                            // Refresh the HomeFragment immediately after sync completes
+                            refreshUIAfterSync(bundleDate);
+                        }
+                    } catch (Exception e) {
+                        android.util.Log.e("MainActivity", "❌ CRASH in broadcast receiver!", e);
+                        // Show error to user instead of crashing
+                        Toast.makeText(MainActivity.this, "❌ Error processing sync: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
+            
+            // Register the receiver with proper export flag for Android 14+
+            android.content.IntentFilter filter = new android.content.IntentFilter("com.example.knowlio.SYNC_COMPLETE");
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                // Android 14+ requires explicit export flag
+                registerReceiver(syncCompleteReceiver, filter, android.content.Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                // Older Android versions
+                registerReceiver(syncCompleteReceiver, filter);
+            }
+            
+            android.util.Log.d("MainActivity", "✅ Successfully registered sync complete broadcast receiver");
+            
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "❌ CRASH registering broadcast receiver!", e);
+            Toast.makeText(this, "❌ Error setting up sync: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    /**
+     * Refreshes the UI after sync completion
+     */
+    private void refreshUIAfterSync(String bundleDate) {
+        try {
+            android.util.Log.d("MainActivity", "🔄 Starting UI refresh after sync for bundle: " + bundleDate);
+            
+            // Wait a moment for the database to be fully updated
+            new android.os.Handler().postDelayed(() -> {
+                try {
+                    android.util.Log.d("MainActivity", "🔄 Executing delayed UI refresh...");
+                    
+                    if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof HomeFragment) {
+                        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+                        if (homeFragment != null) {
+                            android.util.Log.d("MainActivity", "🔄 Found HomeFragment, starting refresh...");
+                            
+                            try {
+                                // Force refresh by clearing cache and reloading
+                                homeFragment.loadData();
+                                android.util.Log.d("MainActivity", "✅ loadData() completed successfully");
+                                
+                                // Also force a fragment refresh
+                                getSupportFragmentManager().beginTransaction()
+                                        .detach(homeFragment)
+                                        .attach(homeFragment)
+                                        .commit();
+                                android.util.Log.d("MainActivity", "✅ Fragment transaction completed successfully");
+                                
+                                Toast.makeText(this, "🔄 UI refreshed after sync! Bundle: " + bundleDate, Toast.LENGTH_LONG).show();
+                                
+                                android.util.Log.d("MainActivity", "✅ UI refresh completed for bundle: " + bundleDate);
+                                
+                            } catch (Exception e) {
+                                android.util.Log.e("MainActivity", "❌ CRASH during fragment operations!", e);
+                                Toast.makeText(this, "❌ Error refreshing UI: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            android.util.Log.w("MainActivity", "⚠️ HomeFragment is null");
+                        }
+                    } else {
+                        android.util.Log.w("MainActivity", "⚠️ Container doesn't contain HomeFragment");
+                    }
+                    
+                } catch (Exception e) {
+                    android.util.Log.e("MainActivity", "❌ CRASH in delayed UI refresh!", e);
+                    Toast.makeText(this, "❌ Error in delayed refresh: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }, 1000); // Wait 1 second for database to be fully updated
+            
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "❌ CRASH in refreshUIAfterSync!", e);
+            Toast.makeText(this, "❌ Error starting UI refresh: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    /**
+     * Fallback UI refresh method when broadcast receiver fails
+     */
+    private void scheduleFallbackUIRefresh() {
+        try {
+            android.util.Log.d("MainActivity", "🔄 Scheduling fallback UI refresh...");
+            
+            // Wait for sync to complete, then refresh UI
+            new android.os.Handler().postDelayed(() -> {
+                try {
+                    android.util.Log.d("MainActivity", "🔄 Executing fallback UI refresh...");
+                    
+                    if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof HomeFragment) {
+                        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+                        if (homeFragment != null) {
+                            // Force refresh by clearing cache and reloading
+                            homeFragment.loadData();
+                            
+                            // Also force a fragment refresh
+                            getSupportFragmentManager().beginTransaction()
+                                    .detach(homeFragment)
+                                    .attach(homeFragment)
+                                    .commit();
+                            
+                            Toast.makeText(this, "🔄 UI refreshed after sync (fallback)!", Toast.LENGTH_LONG).show();
+                            android.util.Log.d("MainActivity", "✅ Fallback UI refresh completed");
+                        }
+                    }
+                } catch (Exception e) {
+                    android.util.Log.e("MainActivity", "❌ CRASH in fallback UI refresh!", e);
+                    Toast.makeText(this, "❌ Error in fallback refresh: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }, 5000); // Wait 5 seconds for sync to complete
+            
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "❌ CRASH scheduling fallback refresh!", e);
+        }
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        
+        // Unregister broadcast receiver
+        if (syncCompleteReceiver != null) {
+            try {
+                unregisterReceiver(syncCompleteReceiver);
+                android.util.Log.d("MainActivity", "📡 Unregistered sync complete broadcast receiver");
+            } catch (Exception e) {
+                android.util.Log.e("MainActivity", "Error unregistering broadcast receiver", e);
+            }
+        }
     }
 }

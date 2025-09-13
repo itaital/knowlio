@@ -1,9 +1,11 @@
+project_name: knowlio    # שם מזהה לקומיטים של Codex
+
 setup-script: |
   # מעדכן את רשימת החבילות ומתקין כלי עזר
   sudo apt-get update
   sudo apt-get install -y wget unzip openjdk-17-jdk
 
-  # מגדיר משתנים סביבתיים ל-SDK
+  # מגדיר משתני סביבתיים ל-SDK
   export ANDROID_SDK_ROOT=$HOME/android-sdk
   export ANDROID_HOME=$ANDROID_SDK_ROOT
   export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
@@ -23,11 +25,25 @@ setup-script: |
   # מתקין Android Platform 34, Build Tools ו-platform-tools
   $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
       "platforms;android-34" \
-      "build-tools;34.0.0" \
+      "build-tools;35.0.0" \
       "platform-tools"
 
   # יוצר את הקובץ local.properties כדי ש-Gradle ימצא את ה-SDK
   echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
 
-  # הנחיה ל-Codex / Copilot: ודא שכל רכיב UI ב-XML מכיל layout_width ו-layout_height
   # Codex Note: Always include android:layout_width and android:layout_height for every View.
+
+scripts:
+  build: ./gradlew assembleDebug   # קומפילציה מלאה
+  test:  ./gradlew lint            # בדיקת Lint (אופציונלי, אפשר לשנות)
+
+sandbox:
+  mode: workspace                  # מאפשר לקודקס לערוך קבצים בשורש הפרויקט
+
+files:
+  - app/**
+  - scripts/**
+  - build.gradle.kts       # או build.gradle
+  - settings.gradle.kts
+  - gradle/**
+  - codex.yaml

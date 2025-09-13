@@ -20,6 +20,8 @@ import com.example.knowlio.data.FactsRepository;
 import com.example.knowlio.data.models.LanguageContent;
 
 import java.util.Locale;
+import java.time.LocalDate;
+import android.util.Log;
 
 public class HomeFragment extends Fragment {
 
@@ -43,25 +45,84 @@ public class HomeFragment extends Fragment {
 
     @Override public void onResume() {
         super.onResume();
-        loadData();
+        
+        // Check if we need to force refresh due to sync
+        SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext());
+        boolean forceRefresh = prefs.getBoolean("force_refresh_ui", false);
+        String lastSyncedBundle = prefs.getString("last_synced_bundle_date", null);
+        
+        Log.d("HomeFragment", "🔄 onResume - forceRefresh: " + forceRefresh + ", lastSyncedBundle: " + lastSyncedBundle);
+        
+        if (forceRefresh) {
+            Log.d("HomeFragment", "🔄 Force refresh detected, clearing cache and reloading...");
+            // Clear the force refresh flag
+            prefs.edit().putBoolean("force_refresh_ui", false).apply();
+            
+            // Clear any old cached data
+            clearOldCachedData();
+            
+            // Force reload data
+            loadData();
+            
+            // Show notification that refresh occurred
+            android.widget.Toast.makeText(requireContext(), 
+                "🔄 Content refreshed after sync!", 
+                android.widget.Toast.LENGTH_SHORT).show();
+        } else {
+            // Check if we have a new synced bundle that we haven't displayed yet
+            if (lastSyncedBundle != null) {
+                FactsRepository repo = new FactsRepository(requireContext());
+                LocalDate[] availableDates = repo.listDates();
+                if (availableDates.length > 0) {
+                    String currentDisplayedDate = availableDates[0].toString();
+                    if (!currentDisplayedDate.equals(lastSyncedBundle)) {
+                        Log.d("HomeFragment", "🔄 New synced bundle detected! Synced: " + lastSyncedBundle + ", Displayed: " + currentDisplayedDate);
+                        // Clear cache and reload to show new content
+                        clearOldCachedData();
+                        loadData();
+                        android.widget.Toast.makeText(requireContext(), 
+                            "🔄 New content loaded: " + lastSyncedBundle, 
+                            android.widget.Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+            
+            loadData();
+        }
+        
+        // Show current bundle date in a toast for debugging
+        FactsRepository repo = new FactsRepository(requireContext());
+        LocalDate[] availableDates = repo.listDates();
+        if (availableDates.length > 0) {
+            String currentDate = availableDates[0].toString();
+            android.widget.Toast.makeText(requireContext(), 
+                "📅 Current bundle: " + currentDate, 
+                android.widget.Toast.LENGTH_LONG).show();
+        }
     }
 
     /** Loads today’s bundle from SharedPreferences ➜ displays it. */
-    private void loadData() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
+    public void loadData() {
+        try {
+            Log.d("HomeFragment", "🔄 Starting loadData()...");
+            
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            String lang = prefs.getString("pref_lang", Locale.getDefault().getLanguage());
+            Log.d("HomeFragment", "🔄 Language: " + lang);
 
-        FactsRepository repo = new FactsRepository(requireContext());
-        LanguageContent c = repo.getTodayBundle(lang);
+            FactsRepository repo = new FactsRepository(requireContext());
+            LanguageContent c = repo.getTodayBundle(lang);
+            Log.d("HomeFragment", "🔄 Retrieved content: " + (c != null ? "SUCCESS" : "NULL"));
 
-        if (c == null) {
-            tvEmpty.setVisibility(View.VISIBLE);
-            quotesLayout.removeAllViews();
-            knowledgeLayout.removeAllViews();
-            peopleLayout.removeAllViews();
-            return;
-        }
-        tvEmpty.setVisibility(View.GONE);
+            if (c == null) {
+                Log.w("HomeFragment", "⚠️ No content available, showing empty state");
+                tvEmpty.setVisibility(View.VISIBLE);
+                quotesLayout.removeAllViews();
+                knowledgeLayout.removeAllViews();
+                peopleLayout.removeAllViews();
+                return;
+            }
+            tvEmpty.setVisibility(View.GONE);
 
         /* ── Quote(s) ───────────────────────── */
         quotesLayout.removeAllViews();
@@ -89,17 +150,62 @@ public class HomeFragment extends Fragment {
             }
         }
 
-        /* ── Who were they (Strings) ────────── */
+        /* ── Who were they (Person objects) ────────── */
         peopleLayout.removeAllViews();
         if (c.whoWereThey != null && !c.whoWereThey.isEmpty()) {
-            for (String p : c.whoWereThey) {
+            Log.d("HomeFragment", "📖 Displaying " + c.whoWereThey.size() + " people in whoWereThey");
+            for (com.example.knowlio.data.models.Person p : c.whoWereThey) {
                 TextView t = new TextView(requireContext());
-                t.setText("• " + p);
+                t.setText("• " + p.toString());
                 TextViewCompat.setTextAppearance(
                         t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
                 t.setPadding(0,0,0,12);
                 peopleLayout.addView(t);
             }
+        } else {
+            // Show placeholder when whoWereThey is empty
+            Log.w("HomeFragment", "⚠️ whoWereThey is empty or null");
+            TextView placeholder = new TextView(requireContext());
+            placeholder.setText("• No biographical information available today");
+            placeholder.setTextColor(0xFF666666); // Gray color
+            TextViewCompat.setTextAppearance(
+                    placeholder, com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
+            placeholder.setPadding(0,0,0,12);
+            peopleLayout.addView(placeholder);
+        }
+            
+            Log.d("HomeFragment", "✅ loadData() completed successfully");
+            
+        } catch (Exception e) {
+            Log.e("HomeFragment", "❌ CRASH in loadData()!", e);
+            // Show error to user
+            try {
+                android.widget.Toast.makeText(requireContext(), 
+                    "❌ Error loading content: " + e.getMessage(), 
+                    android.widget.Toast.LENGTH_LONG).show();
+            } catch (Exception toastError) {
+                Log.e("HomeFragment", "Even toast failed!", toastError);
+            }
+        }
+    }
+    
+    /**
+     * Clears old cached data to force fresh content display
+     */
+    private void clearOldCachedData() {
+        try {
+            Log.d("HomeFragment", "🧹 Clearing old cached data...");
+            
+            // Clear any old cached fact dates
+            SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext());
+            prefs.edit()
+                    .remove("cached_fact_date")
+                    .apply();
+            
+            Log.d("HomeFragment", "🧹 Cleared old cached fact dates");
+            
+        } catch (Exception e) {
+            Log.e("HomeFragment", "Error clearing old cached data", e);
         }
     }
 }

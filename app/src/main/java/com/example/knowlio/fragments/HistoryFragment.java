@@ -113,9 +113,9 @@ public class HistoryFragment extends Fragment {
         /* Who were they */
         peopleLayout.removeAllViews();
         if (c.whoWereThey != null && !c.whoWereThey.isEmpty()) {
-            for (String p : c.whoWereThey) {
+            for (com.example.knowlio.data.models.Person p : c.whoWereThey) {
                 TextView t = new TextView(requireContext());
-                t.setText("• " + p);
+                t.setText("• " + p.toString());
                 TextViewCompat.setTextAppearance(
                         t, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
                 t.setPadding(0,0,0,12);
