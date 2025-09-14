@@ -451,8 +451,13 @@ def validate_bundle_schema(bundle: dict, require_who: bool = False) -> None:
             if key not in lang_content:
                 sys.exit(f"❌  Missing required key '{key}' in language '{lang_code}'")
             
-            if not isinstance(lang_content[key], list):
-                sys.exit(f"❌  '{key}' must be a list in language '{lang_code}'")
+            # quoteOfTheDay should be a string, others should be lists
+            if key == "quoteOfTheDay":
+                if not isinstance(lang_content[key], str):
+                    sys.exit(f"❌  '{key}' must be a string in language '{lang_code}'")
+            else:
+                if not isinstance(lang_content[key], list):
+                    sys.exit(f"❌  '{key}' must be a list in language '{lang_code}'")
         
         # Check whoWereThey specifically
         who_were_they = lang_content["whoWereThey"]
