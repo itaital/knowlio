@@ -12,6 +12,7 @@
 import json, os, requests, warnings, sys, argparse, random
 from datetime import date
 from typing import List, Dict, Optional
+import urllib3
 
 # ─────────────── הגדרות סביבתיות ───────────────
 GIST_ID  = os.getenv("GIST_ID")
@@ -105,6 +106,10 @@ def get_people(lang: str = 'en', n: int = 2, seed: Optional[str] = None) -> List
 # ────────── פונקציות הבאת נתונים ──────────
 def fetch_json(url: str, label: str, verify_ssl: bool = True) -> dict | None:
     try:
+        # Suppress SSL warnings when verify_ssl is False
+        if not verify_ssl:
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        
         resp = requests.get(url, timeout=10, verify=verify_ssl)
         resp.raise_for_status()
         print(f"ℹ️  {label} OK")
@@ -112,7 +117,20 @@ def fetch_json(url: str, label: str, verify_ssl: bool = True) -> dict | None:
     except requests.exceptions.SSLError as e:
         print(f"⚠️  {label} SSL error: {e}")
         if verify_ssl:          # ניסיון נוסף בלי אימות
+            print(f"🔄  Retrying {label} without SSL verification...")
             return fetch_json(url, label + " (no-verify)", verify_ssl=False)
+    except requests.exceptions.ConnectTimeout as e:
+        print(f"⚠️  {label} connection timeout: {e}")
+    except requests.exceptions.ReadTimeout as e:
+        print(f"⚠️  {label} read timeout: {e}")
+    except requests.exceptions.ConnectionError as e:
+        print(f"⚠️  {label} connection error: {e}")
+    except requests.exceptions.HTTPError as e:
+        print(f"⚠️  {label} HTTP error: {e}")
+    except requests.exceptions.RequestException as e:
+        print(f"⚠️  {label} network error: {e}")
+    except json.JSONDecodeError as e:
+        print(f"⚠️  {label} invalid JSON response: {e}")
     except Exception as e:
         print(f"⚠️  {label} failed: {e}")
     return None

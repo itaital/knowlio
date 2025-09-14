@@ -8,3 +8,4 @@ from generate_and_patch_gist import *
 if __name__ == "__main__":
     # Re-run the main script
     exec(open(os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_and_patch_gist.py')).read())
+
