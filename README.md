@@ -1,10 +1,20 @@
-# Knowlio
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-Android sample project to display daily knowledge facts.
+# Run and deploy your AI Studio app
 
-## Building
-1. Install Android SDK (compileSdk 34) and Material Components 1.12.0.
-2. Ensure `local.properties` points to your SDK (`sdk.dir=/path/to/sdk`).
-3. Run `./gradlew assembleDebug` to build.
+This contains everything you need to run your app locally.
 
-The main screen shows a Material3 card with today’s fact fetched from the Room database.
+View your app in AI Studio: https://ai.studio/apps/temp/1
+
+## Run Locally
+
+**Prerequisites:**  Node.js
+
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`

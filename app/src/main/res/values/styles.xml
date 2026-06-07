@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Overlay for cards with extra large rounded corners -->
-    <style name="Shape.Corner.XLarge" parent="ShapeAppearance.Material3.Corner.ExtraLarge"/>
-</resources>
