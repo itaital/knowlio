@@ -1,6 +1,12 @@
 
 import type { DailyQuoteBundle } from '../types';
 import { MOCK_DATA } from './mockData';
+import {
+  getArchivedBundle,
+  hasArchivedContent,
+  listReachedArchiveDates,
+} from './contentArchive';
+import { getLocalDateKey } from './dateUtils';
 
 const GIST_SIMULATION_DELAY = 500; // ms
 
@@ -26,6 +32,15 @@ function getBundleKey(date: string): string {
 }
 
 export async function getBundle(date: string): Promise<DailyQuoteBundle | null> {
+  const archivedBundle = getArchivedBundle(date);
+  if (archivedBundle) {
+    return archivedBundle;
+  }
+
+  if (hasArchivedContent()) {
+    return null;
+  }
+
   const key = getBundleKey(date);
   
   // 1. Try to load from localStorage (offline-first)
@@ -57,6 +72,10 @@ export async function getBundle(date: string): Promise<DailyQuoteBundle | null> 
 }
 
 export function listSavedDates(): string[] {
+  if (hasArchivedContent()) {
+    return listReachedArchiveDates(getLocalDateKey());
+  }
+
   const dates: string[] = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);

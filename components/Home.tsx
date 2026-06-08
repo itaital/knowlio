@@ -6,6 +6,7 @@ import QuoteCard from './QuoteCard';
 import KnowledgeCard from './KnowledgeCard';
 import WhoWereTheyCard from './WhoWereTheyCard';
 import LoadingSpinner from './LoadingSpinner';
+import { getContentDateKey } from '../services/dateUtils';
 
 interface HomeProps {
   language: Language;
@@ -20,7 +21,7 @@ const Home: React.FC<HomeProps> = ({ language }) => {
     setLoading(true);
     setError(null);
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const today = getContentDateKey();
       const data = await getBundle(today);
       if (data) {
         setBundle(data);

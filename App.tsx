@@ -6,6 +6,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { Language, SUPPORTED_LANGUAGES } from './constants';
 import { getBundle } from './services/factsService';
 import { knowlioLogoSvg } from './components/Icon';
+import { getLocalDateKey } from './services/dateUtils';
 
 
 type View = 'home' | 'history';
@@ -40,7 +41,7 @@ function App() {
       const now = new Date();
       // Check if it's 8:00 AM
       if (now.getHours() === 8 && now.getMinutes() === 0) {
-        const todayStr = now.toISOString().split('T')[0];
+        const todayStr = getLocalDateKey(now);
         const notifiedKey = `notified_for_${todayStr}`;
 
         if (!localStorage.getItem(notifiedKey)) {
