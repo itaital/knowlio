@@ -27,7 +27,7 @@ const WhoWereTheyCard: React.FC<WhoWereTheyCardProps> = ({ people, language }) =
       </div>
       <div className="space-y-4">
         {finalPeople.map((person, index) => (
-          <div key={index}>
+          <div key={index} className="border-b border-slate-200 dark:border-slate-700 pb-4 last:border-b-0">
             <p className="text-slate-600 dark:text-slate-300">
               <span className="font-bold text-lg text-slate-700 dark:text-slate-200">{person.name}:</span> {person.bio}
             </p>

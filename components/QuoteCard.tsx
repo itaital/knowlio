@@ -8,13 +8,25 @@ interface QuoteCardProps {
 }
 
 const QuoteCard: React.FC<QuoteCardProps> = ({ quotes, language }) => {
+  const parseQuote = (quote: string) => {
+    const parts = quote.split(/\s[-–—]\s/);
+    if (parts.length < 2) {
+      return { text: quote.trim(), author: '' };
+    }
+
+    return {
+      text: parts.slice(0, -1).join(' - ').trim(),
+      author: parts.at(-1)?.trim() ?? '',
+    };
+  };
+
   const handleShare = async () => {
     if (!quotes || quotes.length === 0) return;
     
     const title = language === 'he' ? 'ציטוטים יומיים' : 'Daily Quotes';
     const text = quotes.map(q => {
-        const [quoteText, author] = q.split('–');
-        return `"${quoteText.trim()}"\n– ${author ? author.trim() : 'Unknown'}`;
+        const { text: quoteText, author } = parseQuote(q);
+        return `"${quoteText}"\n– ${author || 'Unknown'}`;
     }).join('\n\n');
 
     if (navigator.share) {
@@ -54,11 +66,11 @@ const QuoteCard: React.FC<QuoteCardProps> = ({ quotes, language }) => {
       </div>
       <div className="space-y-6">
         {quotes.map((quote, index) => {
-          const [text, author] = quote.split('–');
+          const { text, author } = parseQuote(quote);
           return (
             <div key={index} className="border-s-4 border-indigo-200 dark:border-indigo-800 ps-4">
               <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 italic">
-                "{text.trim()}"
+                "{text}"
               </p>
               {author && (
                 <p className="text-end text-sm font-medium text-indigo-500 dark:text-indigo-400 mt-2">

@@ -234,3 +234,9 @@ html[dir="rtl"] .rtl\:space-x-reverse > :not([hidden]) ~ :not([hidden]) {
 @media (min-width: 1024px) {
   .lg\:px-8 { padding-left: 2rem; padding-right: 2rem; }
 }
+
+.border-b { border-bottom-width: 1px; }
+.pb-4 { padding-bottom: 1rem; }
+.border-slate-200 { border-color: #e2e8f0; }
+.dark .dark\:border-slate-700 { border-color: #334155; }
+.last\:border-b-0:last-child { border-bottom-width: 0; }
